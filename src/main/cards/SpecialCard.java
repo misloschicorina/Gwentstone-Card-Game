@@ -9,7 +9,7 @@ public class SpecialCard extends Card {
     @JsonIgnore
     private String ability;
 
-    // Coordonatele cartii pe tabla de joc
+    // Special Card's coords on gameboard
     @JsonIgnore
     private int x;
     @JsonIgnore
@@ -17,7 +17,7 @@ public class SpecialCard extends Card {
 
     public SpecialCard(int mana, String description, ArrayList<String> colors, String name,
                        int health, int attackDamage, int x, int y) {
-        super(mana, attackDamage, health, description, colors, name);  // Call parent constructor
+        super(mana, attackDamage, health, description, colors, name);
         this.frozen = false;
         this.x = x;
         this.y = y;

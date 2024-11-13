@@ -5,15 +5,15 @@ import main.cards.Hero;
 public class GetPlayerHeroResponse {
 
     private final String command;
-    private final int playerIdx;
+    private final int playerId;
 
     private final Hero output;
 
 
-    public GetPlayerHeroResponse(final String command, final Hero hero, final int playerIdx) {
+    public GetPlayerHeroResponse(final String command, final Hero hero, final int playerId) {
         this.command = command;
         this.output = hero;
-        this.playerIdx = playerIdx;
+        this.playerId = playerId;
     }
 
     public final String getCommand() {
@@ -25,7 +25,7 @@ public class GetPlayerHeroResponse {
     }
 
     public final int getPlayerIdx() {
-        return playerIdx;
+        return playerId;
     }
 
 }

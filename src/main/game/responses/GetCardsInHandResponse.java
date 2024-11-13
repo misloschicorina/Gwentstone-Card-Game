@@ -4,16 +4,15 @@ import main.cards.Card;
 
 import java.util.ArrayList;
 
-public class GetPlayerDeckResponse {
-
+public class GetCardsInHandResponse {
     private final String command;
 
     private final ArrayList<Card> output;
     private final int playerId;
 
-    public GetPlayerDeckResponse(final String command, final ArrayList<Card> deck, final int playerId) {
+    public GetCardsInHandResponse(final String command, final ArrayList<Card> output, final int playerId) {
         this.command = command;
-        this.output = deck;
+        this.output = output;
         this.playerId = playerId;
     }
 
@@ -30,4 +29,3 @@ public class GetPlayerDeckResponse {
     }
 
 }
-

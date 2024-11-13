@@ -73,7 +73,7 @@ public final class Main {
         GameManager session = new GameManager(objectMapper, inputData, output);
 
         // start playing the game:
-        session.play();
+        session.manageGames();
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

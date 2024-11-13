@@ -14,7 +14,7 @@ public class CardBuilder {
         int health = input.getHealth();
         int attackDamage = input.getAttackDamage();
 
-        // Initial position coordinates x, y set to -1, as cards are considered off the game board
+        // Initially, coords x, y are set to -1, as cards are considered off the game board
         int x = -1;
         int y = -1;
 
@@ -32,7 +32,7 @@ public class CardBuilder {
                 // Return SpecialCard cards
                 return new SpecialCard(mana, description, colors, name, health, attackDamage, x, y);
             default:
-                return null; // Return null if the card name is unknown
+                return null;
         }
     }
 }

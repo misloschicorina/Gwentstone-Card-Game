@@ -10,16 +10,17 @@ public class Hero extends Card {
     public final int STARTING_HEALTH = 30;
 
     public int health; // sanatate curenta erou
+
     @JsonIgnore
     public boolean frozen;
     @JsonIgnore
     public String ability;
 
     @JsonIgnore
-    public int attackDamage;  // Override and ignore attackDamage for Hero
+    public int attackDamage;
 
     public Hero(int mana, String description, ArrayList<String> colors, String name) {
-        super(mana, 0, 30, description, colors, name);  // Call parent constructor with health and attackDamage as 0
+        super(mana, 0, 30, description, colors, name);
         this.frozen = false;
         this.health = STARTING_HEALTH;
         switch (this.name) {

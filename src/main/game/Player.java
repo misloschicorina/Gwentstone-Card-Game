@@ -2,7 +2,6 @@ package main.game;
 
 import fileio.DecksInput;
 import fileio.CardInput;
-import main.game.Deck;
 import main.cards.Card;
 import main.cards.Hero;
 
@@ -21,7 +20,7 @@ public class Player {
     public Hero hero;
 
     public ArrayList<Card> hand; // lista de carti din mana
-    public ArrayList<Deck> decks;  // deck-ul de carti din care se trage in mana
+    public ArrayList<Deck> decks;  // deck-urile de carti ale player-ului
 
     public Deck currentDeck; // deck ul curent folosit in joc
 
@@ -36,7 +35,6 @@ public class Player {
         this.nrOfDecks = nrOfDecks;
         this.hand = new ArrayList<>();
         this.decks = new ArrayList<>();
-        // this.hero = null;
         this.decksInput = decksInput;
 
         initDecks();
@@ -82,22 +80,20 @@ public class Player {
         }
     }
 
-    public void advanceToNextRound(int round) {
+    public void advanceToNextRound(int manaToReceive) {
         // Draw a card if there are any left in the deck
-        if (currentDeck.nrOfCardsinDeck > 0)
-            hand.add(currentDeck.drawCard());  // trag carte in mana la inceputul rundei daca mai am in deck
+        if (this.currentDeck.nrOfCardsinDeck > 0) {
+            Card drawnCard = this.currentDeck.drawCard();
+            if (drawnCard != null) {
+                this.hand.add(drawnCard);  // Add the drawn card to the hand
+            }
+        }
 
-        // Determine how much mana to add
-        int manaToAdd;
-        if (round < 10)
-            manaToAdd = round;  // Increment mana by round number for the first 10 rounds
-        else
-            manaToAdd = 10;  // After 10 rounds, set mana to 10
+        // Increase the mana (ensure it doesn't exceed 10)
+        this.mana += Math.min(manaToReceive, 10);
 
-        // Add the mana to the current mana
-        this.mana += manaToAdd;
-
-        hero.setFrozen(false); // unfreeze the hero if it was frozen from last round
+        // Unfreeze the hero if it was frozen from the last round
+        this.hero.setFrozen(false);
     }
 
     // Check if the player has enough mana to place a card
@@ -145,5 +141,19 @@ public class Player {
     public final Deck getCurrentDeck() {
         return currentDeck;
     }
+
+    // get the card at a specific idx in the hand
+    public Card getCardFromHand(int index) {
+        if (index >= 0 && index < hand.size()) {
+            return hand.get(index);
+        }
+        return null;
+    }
+
+    public void decreaseMana(int nr) {
+        this.mana -= nr;
+    }
+
+    public int getId()  { return this.id; }
 
 }

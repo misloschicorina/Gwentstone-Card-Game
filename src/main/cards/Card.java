@@ -1,14 +1,21 @@
 package main.cards;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 
 public class Card {
     protected int mana;
+
     protected int attackDamage;
     protected int health;
     protected String description;
     protected ArrayList<String> colors;
     protected String name;
+
+    @JsonIgnore
+    protected int hasUsedAttack;
+
 
     public Card(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
         this.mana = mana;
@@ -17,6 +24,7 @@ public class Card {
         this.description = description;
         this.colors = colors;
         this.name = name;
+        this.hasUsedAttack = 0;
     }
 
     // Getters:
@@ -69,4 +77,37 @@ public class Card {
         this.name = name;
     }
 
+    public void decreaseHealth(int points) {
+        this.health -= points;
+    }
+
+    public void increaseHealth(int points) {
+        this.health += points;
+    }
+
+    public void decreaseAttackDamage(int points) {
+        this.attackDamage -= points;
+    }
+
+    @JsonIgnore
+    public int getHasUsedAttack() {
+        return this.hasUsedAttack;
+    }
+
+    @JsonIgnore
+    public void setHasUsedAttack(int hasUsedAttack) {
+        this.hasUsedAttack = hasUsedAttack;
+    }
+
+    public void swapHealth(Card otherCard) {
+        int tempHealth = this.health;
+        this.health = otherCard.getHealth();
+        otherCard.setHealth(tempHealth);
+    }
+
+    public void swapHealthWithAttackDamage() {
+        int temp = this.health;
+        this.health = this.attackDamage;
+        this.attackDamage = temp;
+    }
 }
