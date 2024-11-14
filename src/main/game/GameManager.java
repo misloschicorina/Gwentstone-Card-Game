@@ -1,9 +1,11 @@
 package main.game;
 
 import fileio.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.util.ArrayList;
+import main.game.responses.*;
 
 public class GameManager {
     private final ObjectMapper objectMapper;
@@ -35,6 +37,45 @@ public class GameManager {
             // Initialize a Game instance with all required parameters
             Game game = new Game(gameInput, player1, player2, objectMapper, output);
             game.play();
+
+            // Check if a player won and update statistics
+            if (game.hasPlayerOneWon()) {
+                playerOneWins++;
+                playerTwoLost++;
+            } else if (game.hasPlayerTwoWon()) {
+                playerTwoWins++;
+                playerOneLost++;
+            }
         }
+    }
+
+    // Method to process session-wide commands after games have been played
+    public void processSessionCommands(ArrayList<String> sessionCommands) {
+        for (String command : sessionCommands) {
+            handleSessionCommands(command);
+        }
+    }
+
+    // Handle each session-wide command
+    public void handleSessionCommands(String command) {
+        switch (command) {
+            case "getPlayerOneWins":
+                addResponseToOutput(new GameStatsResponse("getPlayerOneWins", playerOneWins));
+                break;
+            case "getPlayerTwoWins":
+                addResponseToOutput(new GameStatsResponse("getPlayerTwoWins", playerTwoWins));
+                break;
+            case "getTotalGamesPlayed":
+                addResponseToOutput(new GameStatsResponse("getTotalGamesPlayed", playedGames));
+                break;
+            default:
+                System.out.println("Unknown command: " + command);
+                break;
+        }
+    }
+
+
+    private void addResponseToOutput(Object response) {
+        output.add(objectMapper.convertValue(response, JsonNode.class));
     }
 }

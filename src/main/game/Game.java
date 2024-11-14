@@ -11,6 +11,7 @@ import main.cards.Hero;
 import main.cards.Minion;
 import main.cards.SpecialCard;
 import java.util.ArrayList;
+import main.game.GameManager;
 import fileio.*;
 
 import main.game.responses.*;
@@ -26,6 +27,7 @@ public class Game {
     private int turnsPlayed;
     private int turn;
     private int roundsPlayed;
+    private boolean gameInProcess;
 
     public Game(GameInput gameInput, Player player1, Player player2, ObjectMapper objectMapper, ArrayNode output) {
         this.gameInput = gameInput;
@@ -36,6 +38,7 @@ public class Game {
         this.manaToReceive = 1;
         this.turnsPlayed = 0;
         this.roundsPlayed = 1;
+        this.gameInProcess = true;
     }
 
     public void play() {
@@ -70,6 +73,9 @@ public class Game {
                 case "getCardsOnTable":
                     getCardsOnTable();
                     break;
+                case "getFrozenCardsOnTable":
+                     getFrozenCardsOnTable();
+                    break;
                 case "placeCard":
                     placeCard(action);
                     break;
@@ -81,6 +87,12 @@ public class Game {
                     break;
                 case "cardUsesAbility":
                     cardAbilityUse(action);
+                    break;
+                case "useAttackHero":
+                    attackHero(action);
+                    break;
+                case "useHeroAbility":
+                    useHeroAbility(action);
                     break;
                 case "endPlayerTurn":
                     endPlayerTurn();
@@ -126,6 +138,14 @@ public class Game {
         addResponseToOutput(response);
     }
 
+    private void getFrozenCardsOnTable() {
+        ArrayList<Card> allFrozenCards = gameBoard.getAllFrozenCardsOnTable();
+        GetFrozenCardsResponse response =
+                new GetFrozenCardsResponse("getFrozenCardsOnTable", allFrozenCards);
+        addResponseToOutput(response);
+    }
+
+
     private void placeCard(ActionsInput action) {
         int cardId = action.getHandIdx();
         Player player = (turn == 1) ? player1 : player2;
@@ -170,7 +190,6 @@ public class Game {
             addResponseToOutput(response);
         }
     }
-
 
     private void cardAttackUse(ActionsInput action) {
         Coordinates coordsAtacked = action.getCardAttacked();
@@ -300,6 +319,156 @@ public class Game {
         }
     }
 
+    private void attackHero(ActionsInput action) {
+        Coordinates coordsAttacker = action.getCardAttacker();
+        int xAttacker = coordsAttacker.getX();
+        int yAttacker = coordsAttacker.getY();
+
+        Card cardAttacker = gameBoard.getCardOnTable(gameBoard, xAttacker, yAttacker);
+
+        String error = "";
+        Player opponent = (turn == 1) ? player2 : player1;
+
+        // Validate attacking card's state and conditions
+        if (cardAttacker == null) {
+            error = "Attacker card does not exist on the board.";
+        } else {
+            boolean isAttackerFrozen = false;
+            int hasTank = gameBoard.hasTank(turn);
+
+            if ((cardAttacker instanceof SpecialCard && ((SpecialCard) cardAttacker).isFrozen()) ||
+                    (cardAttacker instanceof Minion && ((Minion) cardAttacker).isFrozen())) {
+                error = "Attacker card is frozen.";
+            } else if (cardAttacker.getHasUsedAttack() != 0) {
+                error = "Attacker card has already attacked this turn.";
+            } else if (hasTank == 1 && !cardAttacker.isTank()) {
+                error = "Attacked card is not of type 'Tank'.";
+            }
+        }
+
+        // If there’s an error, create and add a response
+        if (!error.isEmpty()) {
+            UseAttackHeroResponse response = new UseAttackHeroResponse("useAttackHero", coordsAttacker, error);
+            addResponseToOutput(response);
+            return;
+        }
+
+        // Execute the attack
+        cardAttacker.setHasUsedAttack(1);
+        int attackDamage = cardAttacker.getAttackDamage();
+        opponent.hero.decreaseHealth(attackDamage);
+
+        // Check if the opponent hero has been defeated
+        if (opponent.hero.getHealth() <= 0) {
+            String gameEndedMessage = (turn == 1) ? "Player one killed the enemy hero." : "Player two killed the enemy hero.";
+            GameEndedResponse gameEndedResponse = new GameEndedResponse(gameEndedMessage);
+            addResponseToOutput(gameEndedResponse);
+
+            // End game immediately
+            endGame();
+        }
+    }
+
+    private void useAbilityValid(int affectedRow, Hero hero) {
+        String ability = hero.getAbility();
+        if (ability.equals("Blood Thirst")) {
+            for (int i = 0; i < 5; i++) {
+                Card card = gameBoard.gameBoard[affectedRow][i];
+                if (card != null) {
+                    card.increaseAttackDamage(1);
+                }
+            }
+        }
+
+        if (ability.equals("Earth Born")) {
+            for (int i = 0; i < 5; i++) {
+                Card card = gameBoard.gameBoard[affectedRow][i];
+                if (card != null) {
+                    card.increaseHealth(1);
+                }
+            }
+        }
+
+        if (ability.equals("Low Blow")) {
+            int indexCardToDestroy = -1;
+            int maxHealth = -1;
+
+            for (int i = 0; i < 5; i++) {
+                Card card = gameBoard.gameBoard[affectedRow][i];
+                if (card != null) {
+                    // Dacă găsești o carte cu viața mai mare sau este prima carte găsită (maxHealth inițializat la -1)
+                    if (card.getHealth() > maxHealth) {
+                        maxHealth = card.getHealth();
+                        indexCardToDestroy = i;
+                    }
+                }
+            }
+
+            if (indexCardToDestroy != -1) {
+                gameBoard.removeCardFromBoard(gameBoard, affectedRow, indexCardToDestroy);
+            }
+        }
+
+        if (ability.equals("Sub-Zero")) {
+            for (int i = 0; i < 5; i++) {
+                Card card = gameBoard.gameBoard[affectedRow][i];
+                if (card != null) {
+                    if (card instanceof Minion) {
+                        ((Minion) card).setFrozen(true);
+                    }
+                    if (card instanceof SpecialCard) {
+                        ((SpecialCard) card).setFrozen(true);
+                    }
+                }
+            }
+        }
+    }
+
+    private void useHeroAbility(ActionsInput action) {
+        Player player;  // playerul al carui erou isi foloseste abilitatea
+        if (turn == 1)
+            player = player1;
+        else
+            player = player2;
+
+        int affectedRow = action.getAffectedRow(); // iau din input randul pe care se foloseste abilitatea
+        Hero hero = player.getHero();
+        String heroName = player.hero.getName();
+        int whoseRowIsIt = gameBoard.whoseRowIsIt(affectedRow);
+        int heroMana = player.hero.getMana();
+
+        String error = "";
+        System.out.println(player.getMana() + "_____");
+        System.out.println(player.hero.getMana());
+        if (player.getMana() < heroMana) {
+            error = "Not enough mana to use hero's ability.";
+        } else if (player.hero.getHasUsedAbility() == 1) { // si a folosit deja abilitatea tura asta
+            error = "Hero has already attacked this turn.";
+        } else if ((heroName.equals("Lord Royce") || heroName.equals("Empress Thorina"))) {
+            if (player.id == whoseRowIsIt) {
+                error = "Selected row does not belong to the enemy.";
+            }
+        } else if ((heroName.equals("General Kocioraw") || heroName.equals("King Mudface"))) {
+            if (player.id != whoseRowIsIt) {
+                error = "Selected row does not belong to the current player.";
+            }
+        }
+
+        if (!error.isEmpty()) {
+            UseHeroAbilityResponse response = new UseHeroAbilityResponse("useHeroAbility", affectedRow, error);
+            addResponseToOutput(response);
+            return;
+        }
+
+        useAbilityValid(affectedRow, hero);
+        player.hero.setHasUsedAbility(1);
+        player.decreaseMana(heroMana);
+
+    }
+
+    private void endGame() {
+        gameInProcess = false;
+    }
 
     private void endPlayerTurn() {
         turnsPlayed++;
@@ -307,9 +476,11 @@ public class Game {
         if (turn == 1) {
             gameBoard.unfreezeAllForPlayerOne();
             gameBoard.resetCardsAttackForPlayer(gameBoard, player1);
+            player1.hero.resetHeroAbility();
         } else {
             gameBoard.unfreezeAllForPlayerTwo();
             gameBoard.resetCardsAttackForPlayer(gameBoard, player2);
+            player2.hero.resetHeroAbility();
         }
 
         turn = (turn == 1) ? 2 : 1;
@@ -323,5 +494,13 @@ public class Game {
 
     private void addResponseToOutput(Object response) {
         output.add(objectMapper.convertValue(response, JsonNode.class));
+    }
+
+    public boolean hasPlayerOneWon() {
+        return player2.getHero().getHealth() <= 0;
+    }
+
+    public boolean hasPlayerTwoWon() {
+        return player1.getHero().getHealth() <= 0;
     }
 }

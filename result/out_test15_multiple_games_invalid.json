@@ -3,6 +3,12 @@
   "playerIdx" : 2,
   "output" : 0
 }, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
   "command" : "getCardAtPosition",
   "x" : 1,
   "y" : 0,
@@ -39,11 +45,18 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 6,
-    "health" : 2,
+    "health" : 3,
     "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
     "colors" : [ "Black", "White" ],
     "name" : "Sentinel"
   }
+}, {
+  "command" : "useHeroAbility",
+  "affectedRow" : 2,
+  "error" : "Selected row does not belong to the current player."
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
@@ -60,6 +73,9 @@
     "name" : "Sentinel"
   }
 }, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
   "output" : 3
@@ -70,7 +86,7 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 6,
-    "health" : 2,
+    "health" : 3,
     "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
     "colors" : [ "Black", "White" ],
     "name" : "Sentinel"
@@ -89,10 +105,13 @@
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 15
+  "output" : 12
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
 }, {
   "command" : "getCardAtPosition",
   "x" : 3,
@@ -112,11 +131,28 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 6,
-    "health" : 2,
+    "health" : 3,
     "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
     "colors" : [ "Black", "White" ],
     "name" : "Sentinel"
   }
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 3,
+    "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
+    "colors" : [ "Black", "White" ],
+    "name" : "Sentinel"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 3,
+    "description" : "Standard card: Thrown from the highest cliff, revenge will be his glory.",
+    "colors" : [ "Pink", "Purple" ],
+    "name" : "The Cursed One"
+  } ]
 }, {
   "command" : "cardUsesAttack",
   "cardAttacked" : {
@@ -129,13 +165,34 @@
   },
   "error" : "Attacker card does not exist on the board."
 }, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 2
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 1
+  },
+  "error" : "Attacker card is frozen."
+}, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 21
+  "output" : 18
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
-  "output" : 17
+  "output" : 15
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 1
+  },
+  "error" : "Attacked card is not of type 'Tank'."
 }, {
   "command" : "cardUsesAttack",
   "cardAttacked" : {
@@ -154,11 +211,18 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 6,
-    "health" : 2,
+    "health" : 3,
     "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
     "colors" : [ "Black", "White" ],
     "name" : "Sentinel"
   }
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "useHeroAbility",
+  "affectedRow" : 2,
+  "error" : "Selected row does not belong to the current player."
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
@@ -179,7 +243,7 @@
   "output" : [ [ {
     "mana" : 1,
     "attackDamage" : 6,
-    "health" : 2,
+    "health" : 3,
     "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
     "colors" : [ "Black", "White" ],
     "name" : "Sentinel"
@@ -324,13 +388,16 @@
   "playerIdx" : 1,
   "output" : 1
 }, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
   "command" : "getCardAtPosition",
   "x" : 0,
   "y" : 0,
   "output" : {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 2,
+    "health" : 3,
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
@@ -343,13 +410,16 @@
   "command" : "getPlayerTurn",
   "output" : 1
 }, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
   "command" : "getCardAtPosition",
   "x" : 0,
   "y" : 0,
   "output" : {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 2,
+    "health" : 3,
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
@@ -357,7 +427,7 @@
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 10
+  "output" : 6
 }, {
   "command" : "cardUsesAbility",
   "cardAttacked" : {
@@ -385,6 +455,9 @@
     "name" : "Disciple"
   }
 }, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
   "command" : "getPlayerTurn",
   "output" : 1
 }, {
@@ -398,7 +471,7 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 2,
+    "health" : 4,
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
@@ -433,11 +506,14 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 2,
+    "health" : 4,
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
   }
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
@@ -467,6 +543,10 @@
   "command" : "getPlayerTurn",
   "output" : 1
 }, {
+  "command" : "useHeroAbility",
+  "affectedRow" : 3,
+  "error" : "Selected row does not belong to the enemy."
+}, {
   "command" : "cardUsesAttack",
   "cardAttacked" : {
     "x" : 1,
@@ -487,7 +567,7 @@
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 36
+  "output" : 28
 }, {
   "command" : "cardUsesAbility",
   "cardAttacked" : {
@@ -524,7 +604,7 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 2,
+    "health" : 5,
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
@@ -532,7 +612,7 @@
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 46
+  "output" : 38
 }, {
   "command" : "cardUsesAbility",
   "cardAttacked" : {
@@ -548,6 +628,9 @@
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
   "output" : 42
@@ -561,7 +644,7 @@
   "output" : {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 2,
+    "health" : 5,
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
@@ -592,11 +675,14 @@
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
-  "output" : 52
+  "output" : 49
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 66
+  "output" : 58
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
@@ -615,7 +701,7 @@
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
-  "output" : 62
+  "output" : 59
 }, {
   "command" : "cardUsesAttack",
   "cardAttacked" : {
@@ -628,21 +714,17 @@
   },
   "error" : "Attacked card does not exist on the board."
 }, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
   "command" : "getCardAtPosition",
   "x" : 0,
   "y" : 0,
-  "output" : {
-    "mana" : 1,
-    "attackDamage" : 0,
-    "health" : 2,
-    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
-    "colors" : [ "Green", "Yellow", "Blue" ],
-    "name" : "Disciple"
-  }
+  "output" : "No card available at that position."
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 76
+  "output" : 64
 }, {
   "command" : "getCardAtPosition",
   "x" : 2,
@@ -670,31 +752,48 @@
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
+  "command" : "cardUsesAttack",
+  "cardAttacked" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 1
+  },
+  "error" : "Attacker card does not exist on the board."
+}, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
-  "output" : 86
+  "output" : 74
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
 }, {
   "command" : "getPlayerTurn",
   "output" : 1
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
-  "output" : 82
+  "output" : 76
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 1,
+    "y" : 3
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
   "command" : "getCardAtPosition",
   "x" : 0,
   "y" : 0,
-  "output" : {
-    "mana" : 1,
-    "attackDamage" : 0,
-    "health" : 2,
-    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
-    "colors" : [ "Green", "Yellow", "Blue" ],
-    "name" : "Disciple"
-  }
+  "output" : "No card available at that position."
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
 }, {
   "command" : "cardUsesAttack",
   "cardAttacked" : {
@@ -716,7 +815,21 @@
     "x" : 1,
     "y" : 0
   },
-  "error" : "Attacked card is not of type 'Tank'."
+  "error" : "Attacker card does not exist on the board."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 1
+  },
+  "error" : "Attacker card does not exist on the board."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 0
+  },
+  "error" : "Attacker card does not exist on the board."
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
@@ -724,7 +837,35 @@
   "command" : "getCardAtPosition",
   "x" : 2,
   "y" : 0,
-  "output" : "No card available at that position."
+  "output" : {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 1,
+    "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
+  }
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 1
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 0
+  },
+  "error" : "Attacked card is not of type 'Tank'."
 }, {
   "command" : "getPlayerTurn",
   "output" : 1
@@ -732,59 +873,38 @@
   "command" : "getCardAtPosition",
   "x" : 0,
   "y" : 0,
-  "output" : {
-    "mana" : 1,
-    "attackDamage" : 0,
-    "health" : 2,
-    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
-    "colors" : [ "Green", "Yellow", "Blue" ],
-    "name" : "Disciple"
-  }
+  "output" : "No card available at that position."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 1,
+    "y" : 0
+  },
+  "error" : "Attacker card does not exist on the board."
 }, {
   "command" : "getCardsOnTable",
   "output" : [ [ {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 2,
-    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
-    "colors" : [ "Green", "Yellow", "Blue" ],
-    "name" : "Disciple"
-  }, {
-    "mana" : 1,
-    "attackDamage" : 5,
-    "health" : 4,
-    "description" : "Standard card: Trained by the best, nothing will catch him off-guard.",
-    "colors" : [ "Black", "White" ],
-    "name" : "Sentinel"
-  }, {
-    "mana" : 1,
-    "attackDamage" : 0,
-    "health" : 3,
+    "health" : 6,
     "description" : "Standard card: Thrown from the highest cliff, revenge will be his glory.",
     "colors" : [ "Pink", "Purple" ],
     "name" : "The Cursed One"
   } ], [ {
     "mana" : 1,
-    "attackDamage" : 6,
-    "health" : 7,
-    "description" : "Premium card: Insanity is always an option, now it is an absolute.",
-    "colors" : [ "Red", "Black" ],
-    "name" : "Miraj"
-  }, {
-    "mana" : 1,
     "attackDamage" : 4,
-    "health" : 1,
+    "health" : 5,
     "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
     "colors" : [ "Red", "Purple" ],
     "name" : "Goliath"
-  }, {
-    "mana" : 1,
+  } ], [ {
+    "mana" : 2,
     "attackDamage" : 6,
-    "health" : 4,
+    "health" : 1,
     "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
     "colors" : [ "Black", "Yellow" ],
     "name" : "The Ripper"
-  } ], [ {
+  }, {
     "mana" : 1,
     "attackDamage" : 7,
     "health" : 5,

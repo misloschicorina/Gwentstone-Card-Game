@@ -16,7 +16,6 @@ public class Card {
     @JsonIgnore
     protected int hasUsedAttack;
 
-
     public Card(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
         this.mana = mana;
         this.attackDamage = attackDamage;
@@ -109,5 +108,16 @@ public class Card {
         int temp = this.health;
         this.health = this.attackDamage;
         this.attackDamage = temp;
+    }
+
+    public void increaseAttackDamage(int points) {
+        this.attackDamage += points;
+    }
+
+    @JsonIgnore
+    public boolean isTank() {
+        if (this.name.equals("Goliath") || this.name.equals("Warden"))
+            return true;
+        return false;
     }
 }

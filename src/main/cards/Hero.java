@@ -19,10 +19,14 @@ public class Hero extends Card {
     @JsonIgnore
     public int attackDamage;
 
+    @JsonIgnore
+    int hasUsedAbility;
+
     public Hero(int mana, String description, ArrayList<String> colors, String name) {
         super(mana, 0, 30, description, colors, name);
         this.frozen = false;
         this.health = STARTING_HEALTH;
+        this.hasUsedAbility = 0;
         switch (this.name) {
             case "Lord Royce":
                 this.ability = "Sub-Zero";
@@ -62,4 +66,18 @@ public class Hero extends Card {
     public String getAbility() {
         return ability;
     }
+
+    @Override
+    public void decreaseHealth(int points) {
+        this.health -= points;
+    }
+
+    @JsonIgnore
+    public int getHasUsedAbility() { return this.hasUsedAbility; }
+
+    @JsonIgnore
+    public void setHasUsedAbility(int hasUsedAbility) { this.hasUsedAbility = hasUsedAbility; }
+
+    @JsonIgnore
+    public void resetHeroAbility() { this.hasUsedAbility = 0;}
 }

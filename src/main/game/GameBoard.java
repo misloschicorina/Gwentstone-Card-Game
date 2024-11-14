@@ -119,6 +119,25 @@ public final class GameBoard {
         return allCards;
     }
 
+    public ArrayList<Card> getAllFrozenCardsOnTable() {
+        ArrayList<Card> allFrozenCards = new ArrayList<>();
+
+        // Iterate through all rows and columns of the game board
+        for (int row = 0; row < numberOfRows; row++) {
+            for (int col = 0; col < numberOfColumns; col++) {
+                Card card = gameBoard[row][col];
+                if (card != null) {
+                    if ((card instanceof Minion && ((Minion) card).isFrozen() == true)||
+                            (card instanceof SpecialCard && ((SpecialCard)card).isFrozen() == true))
+                    {
+                        allFrozenCards.add(card);
+                    }
+                }
+            }
+        }
+        return allFrozenCards;
+    }
+
     public int addCardOnBoard(GameBoard board, Card card, int playerId) {
         int row_to_put = -1;
 
@@ -180,6 +199,7 @@ public final class GameBoard {
         }
     }
 
+    // pt debug (sterge la final)
     public void printBoard() {
         for (int row = 0; row < numberOfRows; row++) {
             if (row < 2) {
@@ -246,4 +266,12 @@ public final class GameBoard {
 
         return 0; // Return 0 if no card is present at the location
     }
+
+    public int whoseRowIsIt(int affectedRow) {
+            if (affectedRow < 2)
+                return 2;
+            else
+                return 1;
+        }
+
 }

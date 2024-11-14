@@ -120,7 +120,7 @@
   "command" : "getPlayerHero",
   "output" : {
     "mana" : 3,
-    "health" : 30,
+    "health" : 25,
     "description" : "Standard card: Absolute order, a soldier must devote his life to his General.",
     "colors" : [ "Green", "Yellow" ],
     "name" : "General Kocioraw"
@@ -130,12 +130,14 @@
   "command" : "getPlayerHero",
   "output" : {
     "mana" : 2,
-    "health" : 30,
+    "health" : 25,
     "description" : "Premium card: Her majesty rule is absolute, every non-believer will suffer.",
     "colors" : [ "Black", "Red" ],
     "name" : "Empress Thorina"
   },
   "playerIdx" : 2
+}, {
+  "gameEnded" : "Player two killed the enemy hero."
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,

@@ -1,4 +1,18 @@
 [ {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 1
+  },
+  "error" : "Attacker card has already attacked this turn."
+}, {
   "command" : "getCardAtPosition",
   "x" : 3,
   "y" : 0,
@@ -14,7 +28,7 @@
   "command" : "getPlayerHero",
   "output" : {
     "mana" : 2,
-    "health" : 30,
+    "health" : 25,
     "description" : "Premium card: Time to show who we are, the low-class was never scared of you.",
     "colors" : [ "Brown", "Pink", "Purple" ],
     "name" : "King Mudface"
@@ -64,7 +78,7 @@
   "command" : "getPlayerHero",
   "output" : {
     "mana" : 2,
-    "health" : 30,
+    "health" : 25,
     "description" : "Premium card: Time to show who we are, the low-class was never scared of you.",
     "colors" : [ "Brown", "Pink", "Purple" ],
     "name" : "King Mudface"
