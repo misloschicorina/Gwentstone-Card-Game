@@ -28,8 +28,12 @@ public class Game {
     private int turn;
     private int roundsPlayed;
     private boolean gameInProcess;
+    private int gamesPlayed;
+    private int oneWins;
+    private int twoWins;
 
-    public Game(GameInput gameInput, Player player1, Player player2, ObjectMapper objectMapper, ArrayNode output) {
+    public Game(GameInput gameInput, Player player1, Player player2, ObjectMapper objectMapper, ArrayNode output, int gamesPlayed,
+                int oneWins, int twoWins) {
         this.gameInput = gameInput;
         this.player1 = player1;
         this.player2 = player2;
@@ -39,6 +43,9 @@ public class Game {
         this.turnsPlayed = 0;
         this.roundsPlayed = 1;
         this.gameInProcess = true;
+        this.gamesPlayed = gamesPlayed;
+        this.oneWins =oneWins;
+        this.twoWins =twoWins;
     }
 
     public void play() {
@@ -96,6 +103,15 @@ public class Game {
                     break;
                 case "endPlayerTurn":
                     endPlayerTurn();
+                    break;
+                case "getTotalGamesPlayed":
+                    getTotalGamesPlayed();
+                    break;
+                case "getPlayerOneWins":
+                    getPlayerOneWins();
+                    break;
+                case "getPlayerTwoWins":
+                    getPlayerTwoWins();
                     break;
                 default:
                     break;
@@ -206,9 +222,9 @@ public class Game {
         String error = "";
         
         if (cardAttacker == null) {
-            error = "Attacker card does not exist on the board.";
+            return;
         } else if (cardAttacked == null) {
-            error = "Attacked card does not exist on the board.";
+            return;
         } else {
             boolean isAttackerFrozen = false;
             int hasTank = gameBoard.hasTank(turn);
@@ -266,9 +282,9 @@ public class Game {
         String error = "";
 
         if (cardAttacker == null) {
-            error = "Attacker card does not exist on the board.";
+            return;
         } else if (cardAttacked == null) {
-            error = "Attacked card does not exist on the board.";
+            return;
         } else {
             if (cardAttacker instanceof SpecialCard && ((SpecialCard) cardAttacker).isFrozen()) {
                 error = "Attacker card is frozen.";
@@ -331,7 +347,7 @@ public class Game {
 
         // Validate attacking card's state and conditions
         if (cardAttacker == null) {
-            error = "Attacker card does not exist on the board.";
+            return;
         } else {
             boolean isAttackerFrozen = false;
             int hasTank = gameBoard.hasTank(turn);
@@ -360,10 +376,16 @@ public class Game {
 
         // Check if the opponent hero has been defeated
         if (opponent.hero.getHealth() <= 0) {
-            String gameEndedMessage = (turn == 1) ? "Player one killed the enemy hero." : "Player two killed the enemy hero.";
+            String gameEndedMessage;
+            if (turn == 1) {
+                gameEndedMessage = "Player one killed the enemy hero.";
+                oneWins ++;
+            } else {
+                gameEndedMessage = "Player two killed the enemy hero.";
+                twoWins ++;
+            }
             GameEndedResponse gameEndedResponse = new GameEndedResponse(gameEndedMessage);
             addResponseToOutput(gameEndedResponse);
-
             // End game immediately
             endGame();
         }
@@ -438,8 +460,6 @@ public class Game {
         int heroMana = player.hero.getMana();
 
         String error = "";
-        System.out.println(player.getMana() + "_____");
-        System.out.println(player.hero.getMana());
         if (player.getMana() < heroMana) {
             error = "Not enough mana to use hero's ability.";
         } else if (player.hero.getHasUsedAbility() == 1) { // si a folosit deja abilitatea tura asta
@@ -492,8 +512,19 @@ public class Game {
         }
     }
 
-    private void addResponseToOutput(Object response) {
-        output.add(objectMapper.convertValue(response, JsonNode.class));
+    public void getTotalGamesPlayed() {
+        GetTotalGamesPlayedResponse response = new GetTotalGamesPlayedResponse("getTotalGamesPlayed", gamesPlayed);
+        addResponseToOutput(response);
+    }
+
+    public void getPlayerOneWins() {
+        GetTotalGamesPlayedResponse response = new GetTotalGamesPlayedResponse("getPlayerOneWins", oneWins);
+        addResponseToOutput(response);
+    }
+
+    public void getPlayerTwoWins() {
+        GetTotalGamesPlayedResponse response = new GetTotalGamesPlayedResponse("getPlayerTwoWins", twoWins);
+        addResponseToOutput(response);
     }
 
     public boolean hasPlayerOneWon() {
@@ -503,4 +534,29 @@ public class Game {
     public boolean hasPlayerTwoWon() {
         return player1.getHero().getHealth() <= 0;
     }
+
+    private void addResponseToOutput(Object response) {
+        output.add(objectMapper.convertValue(response, JsonNode.class));
+    }
+
+    public void resetGame(GameInput newGameInput) {
+        // iau iar inputul
+        StartGameInput startGame = newGameInput.getStartGame();
+
+        // Reinit playeri
+        int seed = startGame.getShuffleSeed();
+        player1.startGame(startGame.getPlayerOneDeckIdx(), seed, startGame.getPlayerOneHero());
+        player2.startGame(startGame.getPlayerTwoDeckIdx(), seed, startGame.getPlayerTwoHero());
+
+        // Reinit tabla
+        gameBoard = new GameBoard();
+
+        turn = startGame.getStartingPlayer();
+        manaToReceive = 1;
+        turnsPlayed = 0;
+        roundsPlayed = 1;
+        gameInProcess = true;
+    }
+
+
 }

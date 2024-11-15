@@ -43,9 +43,13 @@ public class Deck {
     }
 
     public Card drawCard() {
+        if (cards.isEmpty()) {
+            return null; // Return null if no cards are left in the deck
+        }
         nrOfCardsinDeck--;
-        return cards.remove(0);
+        return cards.remove(0); // Remove the top card from the deck
     }
+
 
     public void shuffle(int seed) {
         Random random = new Random(seed);

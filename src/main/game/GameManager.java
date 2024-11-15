@@ -28,54 +28,24 @@ public class GameManager {
         DecksInput playerTwoDecksInput = input.getPlayerTwoDecks();
         ArrayList<GameInput> games = input.getGames();
 
+        // Initialize players outside the loop
+        Player player1 = new Player(1, playerOneWins, playerOneLost, playerOneDecksInput.getNrDecks(), playerOneDecksInput);
+        Player player2 = new Player(2, playerTwoWins, playerTwoLost, playerTwoDecksInput.getNrDecks(), playerTwoDecksInput);
+
+        Game game = null;
+
         for (GameInput gameInput : games) {
             playedGames++;
 
-            Player player1 = new Player(1, playerOneWins, playerOneLost, playerOneDecksInput.getNrDecks(), playerOneDecksInput);
-            Player player2 = new Player(2, playerTwoWins, playerTwoLost, playerTwoDecksInput.getNrDecks(), playerTwoDecksInput);
-
-            // Initialize a Game instance with all required parameters
-            Game game = new Game(gameInput, player1, player2, objectMapper, output);
-            game.play();
-
-            // Check if a player won and update statistics
-            if (game.hasPlayerOneWon()) {
-                playerOneWins++;
-                playerTwoLost++;
-            } else if (game.hasPlayerTwoWon()) {
-                playerTwoWins++;
-                playerOneLost++;
+            if (game == null) {
+                // la inceput creez instanta jocului
+                game = new Game(gameInput, player1, player2, objectMapper, output, playedGames, playerOneWins, playerTwoWins);
+            } else {
+                // dupa dau reset
+                game.resetGame(gameInput);
             }
+
+            game.play();
         }
-    }
-
-    // Method to process session-wide commands after games have been played
-    public void processSessionCommands(ArrayList<String> sessionCommands) {
-        for (String command : sessionCommands) {
-            handleSessionCommands(command);
-        }
-    }
-
-    // Handle each session-wide command
-    public void handleSessionCommands(String command) {
-        switch (command) {
-            case "getPlayerOneWins":
-                addResponseToOutput(new GameStatsResponse("getPlayerOneWins", playerOneWins));
-                break;
-            case "getPlayerTwoWins":
-                addResponseToOutput(new GameStatsResponse("getPlayerTwoWins", playerTwoWins));
-                break;
-            case "getTotalGamesPlayed":
-                addResponseToOutput(new GameStatsResponse("getTotalGamesPlayed", playedGames));
-                break;
-            default:
-                System.out.println("Unknown command: " + command);
-                break;
-        }
-    }
-
-
-    private void addResponseToOutput(Object response) {
-        output.add(objectMapper.convertValue(response, JsonNode.class));
     }
 }
