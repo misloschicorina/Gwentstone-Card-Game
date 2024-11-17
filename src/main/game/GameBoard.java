@@ -242,20 +242,26 @@ public final class GameBoard {
         return 0;
     }
 
-    public int removeCardFromBoard(GameBoard board, int x, int y) {
-        // Check if the coordinates are within bounds
-        if (x < 0 || x >= numberOfRows || y < 0 || y >= numberOfColumns) {
-            return -1; // Invalid coordinates
+    public int removeCardFromBoard(GameBoard board, int row, int col) {
+        // Validăm coordonatele
+        if (row < 0 || row >= numberOfRows || col < 0 || col >= numberOfColumns) {
+            return -1; // Coordonate invalide
         }
 
-        // Check if there is a card at the specified location
-        if (board.gameBoard[x][y] != null) {
-            // Set the position to null, effectively removing the card
-            board.gameBoard[x][y] = null;
-            return 1; // Return 1 indicating success
+        // Verificăm dacă există o carte pe poziția specificată
+        if (board.gameBoard[row][col] == null) {
+            return 0; // Nu există o carte de eliminat
         }
 
-        return 0; // Return 0 if no card is present at the location
+        // Eliminăm cartea și mutăm restul cărților spre stânga
+        for (int i = col; i < numberOfColumns - 1; i++) {
+            board.gameBoard[row][i] = board.gameBoard[row][i + 1];
+        }
+
+        // Setăm ultima coloană la `null`
+        board.gameBoard[row][numberOfColumns - 1] = null;
+
+        return 1; // Succes
     }
 
     public int whoseRowIsIt(int affectedRow) {
@@ -265,4 +271,13 @@ public final class GameBoard {
                 return 1;
         }
 
+
+    public void resetBoard() {
+        // Iterate through each cell in the game board and set it to null
+        for (int row = 0; row < numberOfRows; row++) {
+            for (int col = 0; col < numberOfColumns; col++) {
+                gameBoard[row][col] = null; // Clear the card from the cell
+            }
+        }
+    }
 }

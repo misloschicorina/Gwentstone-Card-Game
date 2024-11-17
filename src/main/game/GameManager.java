@@ -31,10 +31,10 @@ public class GameManager {
         for (GameInput gameInput : games) {
             playedGames++;
 
-            // Creez o instanță nouă de Game pentru fiecare joc
-            Game game = new Game(gameInput,
-                    new Player(1, playerOneWins, playerOneLost, playerOneDecksInput.getNrDecks(), playerOneDecksInput),
-                    new Player(2, playerTwoWins, playerTwoLost, playerTwoDecksInput.getNrDecks(), playerTwoDecksInput),
+            Player player1 = new Player(1, playerOneWins, playerOneLost, playerOneDecksInput.getNrDecks(), playerOneDecksInput);
+            Player player2 = new Player(2, playerTwoWins, playerTwoLost, playerTwoDecksInput.getNrDecks(), playerTwoDecksInput);
+
+            Game game = new Game(gameInput, player1 ,player2,
                     objectMapper,
                     output,
                     playedGames,
@@ -43,13 +43,13 @@ public class GameManager {
 
             game.play();
 
-
             // Actualizez scorurile globale pe baza rezultatelor jocului
-            if (game.hasPlayerOneWon()) {
+            if (game.hasPlayerOneWon())
                 playerOneWins++;
-            } else if (game.hasPlayerTwoWon()) {
+            else if (game.hasPlayerTwoWon())
                 playerTwoWins++;
-            }
+
+            game.resetGame();
         }
     }
 }

@@ -306,7 +306,7 @@
     "name" : "The Cursed One"
   } ], [ {
     "mana" : 2,
-    "attackDamage" : 5,
+    "attackDamage" : 3,
     "health" : 10,
     "description" : "Standard card: Death incarnate. No better time to die than now.",
     "colors" : [ "Orange", "Red", "Black" ],
@@ -327,8 +327,8 @@
     "name" : "Goliath"
   }, {
     "mana" : 1,
-    "attackDamage" : 10,
-    "health" : 6,
+    "attackDamage" : 5,
+    "health" : 7,
     "description" : "Standard card: He has seen everything, his mind has never been asleep since the making of the realm.",
     "colors" : [ "Brown", "Blue" ],
     "name" : "Warden"
@@ -699,26 +699,7 @@
   "command" : "getFrozenCardsOnTable",
   "output" : [ ]
 }, {
-  "command" : "useAttackHero",
-  "cardAttacker" : {
-    "x" : 2,
-    "y" : 2
-  },
-  "error" : "Attacked card is not of type 'Tank'."
-}, {
-  "command" : "useAttackHero",
-  "cardAttacker" : {
-    "x" : 2,
-    "y" : 1
-  },
-  "error" : "Attacked card is not of type 'Tank'."
-}, {
-  "command" : "useAttackHero",
-  "cardAttacker" : {
-    "x" : 3,
-    "y" : 0
-  },
-  "error" : "Attacked card is not of type 'Tank'."
+  "gameEnded" : "Player one killed the enemy hero."
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
@@ -772,13 +753,6 @@
     "colors" : [ "Orange", "Red", "Black" ],
     "name" : "The Ripper"
   }, {
-    "mana" : 1,
-    "attackDamage" : 6,
-    "health" : 7,
-    "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
-    "colors" : [ "Red", "Purple" ],
-    "name" : "Goliath"
-  }, {
     "mana" : 2,
     "attackDamage" : 5,
     "health" : 4,
@@ -788,7 +762,7 @@
   } ], [ {
     "mana" : 2,
     "attackDamage" : 3,
-    "health" : 12,
+    "health" : 8,
     "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
     "colors" : [ "Red", "Black" ],
     "name" : "Miraj"
@@ -866,7 +840,7 @@
   "playerIdx" : 2
 }, {
   "command" : "getPlayerOneWins",
-  "output" : 1
+  "output" : 2
 }, {
   "command" : "getPlayerTwoWins",
   "output" : 0

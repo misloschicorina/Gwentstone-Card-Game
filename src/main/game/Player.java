@@ -156,4 +156,9 @@ public class Player {
 
     public int getId()  { return this.id; }
 
+    public void resetPlayer() {
+        this.mana = 1; // Reset mana
+        this.hand.clear(); // Clear the hand
+        this.currentDeck = null;
+    }
 }

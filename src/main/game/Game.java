@@ -11,7 +11,6 @@ import main.cards.Hero;
 import main.cards.Minion;
 import main.cards.SpecialCard;
 import java.util.ArrayList;
-import main.game.GameManager;
 import fileio.*;
 
 import main.game.responses.*;
@@ -27,7 +26,7 @@ public class Game {
     private int turnsPlayed;
     private int turn;
     private int roundsPlayed;
-    private boolean gameInProcess;
+    // private boolean gameInProcess;
     private int gamesPlayed;
     private int oneWins;
     private int twoWins;
@@ -42,19 +41,16 @@ public class Game {
         this.manaToReceive = 1;
         this.turnsPlayed = 0;
         this.roundsPlayed = 1;
-        this.gameInProcess = true;
+        // this.gameInProcess = true;
         this.gamesPlayed = gamesPlayed;
         this.oneWins = oneWins;
         this.twoWins = twoWins;
-
-        // Reinițializez tabla de joc pentru fiecare instanță nouă
-        this.gameBoard = new GameBoard();
+//
+//        // Reinițializez tabla de joc pentru fiecare instanță nouă
+//        this.gameBoard = new GameBoard();
     }
 
     public void play() {
-        // Reset the game stats for a new game
-        resetGameStats();
-
         // Configure the game
         StartGameInput startGame = gameInput.getStartGame();
         int seed = startGame.getShuffleSeed();
@@ -71,7 +67,6 @@ public class Game {
             handleAction(action);
         }
     }
-
 
 
     private void handleAction(ActionsInput action) {
@@ -181,7 +176,6 @@ public class Game {
         int cardId = action.getHandIdx();
         Player player = (turn == 1) ? player1 : player2;
         Card cardToPlace = player.getCardFromHand(cardId);
-        if (cardToPlace != null) {
             String error = "";
 
             if (!player.hasMana(cardToPlace)) {
@@ -200,7 +194,6 @@ public class Game {
                 PlaceCardResponse response = new PlaceCardResponse("placeCard", cardId, error);
                 addResponseToOutput(response);
             }
-        }
     }
 
     private void getCardAtPos(ActionsInput action) {
@@ -237,8 +230,10 @@ public class Game {
         String error = "";
 
         if (cardAttacker == null) {
+            // System.out.println("auu");
             return;
         } else if (cardAttacked == null) {
+            System.out.println("auu");
             return;
         } else {
             boolean isAttackerFrozen = false;
@@ -346,59 +341,63 @@ public class Game {
     }
 
     private void attackHero(ActionsInput action) {
+        // Coordonatele atacatorului
         Coordinates coordsAttacker = action.getCardAttacker();
         int xAttacker = coordsAttacker.getX();
         int yAttacker = coordsAttacker.getY();
 
+        // Obține cartea atacatoare
         Card cardAttacker = gameBoard.getCardOnTable(gameBoard, xAttacker, yAttacker);
 
         String error = "";
         Player opponent = (turn == 1) ? player2 : player1;
 
-        // Validate attacking card's state and conditions
+        // Validări pentru atacul eroului
         if (cardAttacker == null) {
-            return;
+            return; // Atacatorul nu există, ieșim fără eroare (presupunem input garantat)
         } else {
-            boolean isAttackerFrozen = false;
-            int hasTank = gameBoard.hasTank(turn);
-
+            // Verifică dacă atacatorul este "frozen"
             if (cardAttacker.isFrozen()) {
                 error = "Attacker card is frozen.";
-            } else if (cardAttacker.getHasUsedAttack() != 0) {
+            }
+            // Verifică dacă atacatorul a atacat deja în această tură
+            else if (cardAttacker.getHasUsedAttack() != 0) {
                 error = "Attacker card has already attacked this turn.";
-            } else if (hasTank == 1 && !cardAttacker.isTank()) {
+            }
+            // Verifică dacă există Tank-uri pe rândurile adversarului
+            else if (gameBoard.hasTank(turn) == 1) {
                 error = "Attacked card is not of type 'Tank'.";
             }
         }
 
-        // If there’s an error, create and add a response
+        // Dacă există erori, generează un răspuns și încheie
         if (!error.isEmpty()) {
             UseAttackHeroResponse response = new UseAttackHeroResponse("useAttackHero", coordsAttacker, error);
             addResponseToOutput(response);
             return;
         }
 
-        // Execute the attack
-        cardAttacker.setHasUsedAttack(1);
-        int attackDamage = cardAttacker.getAttackDamage();
-        opponent.hero.decreaseHealth(attackDamage);
+        // Execută atacul
+        cardAttacker.setHasUsedAttack(1); // Marchează atacatorul ca utilizat
+        int attackDamage = cardAttacker.getAttackDamage(); // Obține punctele de atac
+        opponent.getHero().decreaseHealth(attackDamage); // Scade viața eroului inamic
 
-        // Check if the opponent hero has been defeated
-        if (opponent.hero.getHealth() <= 0) {
+        // Verifică dacă eroul a fost învins
+        if (opponent.getHero().getHealth() <= 0) {
             String gameEndedMessage;
             if (turn == 1) {
                 gameEndedMessage = "Player one killed the enemy hero.";
-                oneWins ++;
+                oneWins++;
             } else {
                 gameEndedMessage = "Player two killed the enemy hero.";
-                twoWins ++;
+                twoWins++;
             }
+
             GameEndedResponse gameEndedResponse = new GameEndedResponse(gameEndedMessage);
             addResponseToOutput(gameEndedResponse);
-            // End game immediately
-            endGame();
         }
     }
+
 
     private void useAbilityValid(int affectedRow, Hero hero) {
         String ability = hero.getAbility();
@@ -489,10 +488,6 @@ public class Game {
 
     }
 
-    private void endGame() {
-        gameInProcess = false;
-    }
-
     private void endPlayerTurn() {
         turnsPlayed++;
 
@@ -552,22 +547,12 @@ public class Game {
         output.add(objectMapper.convertValue(response, JsonNode.class));
     }
 
-    public void resetGame(GameInput newGameInput) {
-        // iau iar inputul
-        StartGameInput startGame = newGameInput.getStartGame();
-
-        // Reinit playeri
-        int seed = startGame.getShuffleSeed();
-        player1.startGame(startGame.getPlayerOneDeckIdx(), seed, startGame.getPlayerOneHero());
-        player2.startGame(startGame.getPlayerTwoDeckIdx(), seed, startGame.getPlayerTwoHero());
-
-        // Reinit tabla
-        gameBoard = new GameBoard();
-
-        turn = startGame.getStartingPlayer();
-        manaToReceive = 1;
-        turnsPlayed = 0;
-        roundsPlayed = 1;
-        gameInProcess = true;
+    public void resetGame() {
+        gameBoard.resetBoard();
+        player1.resetPlayer();
+        player2.resetPlayer();
+        this.manaToReceive = 1;
+        this.turnsPlayed = 0;
+        this.roundsPlayed = 1;
     }
 }
