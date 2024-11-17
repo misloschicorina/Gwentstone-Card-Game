@@ -44,80 +44,95 @@ public class Game {
         this.roundsPlayed = 1;
         this.gameInProcess = true;
         this.gamesPlayed = gamesPlayed;
-        this.oneWins =oneWins;
-        this.twoWins =twoWins;
+        this.oneWins = oneWins;
+        this.twoWins = twoWins;
+
+        // Reinițializez tabla de joc pentru fiecare instanță nouă
+        this.gameBoard = new GameBoard();
     }
 
     public void play() {
-        // Setup players and game board
+        // Reset the game stats for a new game
+        resetGameStats();
+
+        // Configure the game
         StartGameInput startGame = gameInput.getStartGame();
         int seed = startGame.getShuffleSeed();
+
         player1.startGame(startGame.getPlayerOneDeckIdx(), seed, startGame.getPlayerOneHero());
         player2.startGame(startGame.getPlayerTwoDeckIdx(), seed, startGame.getPlayerTwoHero());
+
         gameBoard = new GameBoard();
         turn = startGame.getStartingPlayer();
 
+        // Process actions
         ArrayList<ActionsInput> actions = gameInput.getActions();
-
         for (ActionsInput action : actions) {
-            int playerId = action.getPlayerIdx();
-            switch (action.getCommand()) {
-                case "getPlayerDeck":
-                    getPlayerDeck(playerId);
-                    break;
-                case "getPlayerHero":
-                    getPlayerHero(playerId);
-                    break;
-                case "getPlayerTurn":
-                    getPlayerTurn();
-                    break;
-                case "getPlayerMana":
-                    getPlayerMana(playerId);
-                    break;
-                case "getCardsInHand":
-                    getCardsInHand(playerId);
-                    break;
-                case "getCardsOnTable":
-                    getCardsOnTable();
-                    break;
-                case "getFrozenCardsOnTable":
-                     getFrozenCardsOnTable();
-                    break;
-                case "placeCard":
-                    placeCard(action);
-                    break;
-                case "getCardAtPosition":
-                    getCardAtPos(action);
-                    break;
-                case "cardUsesAttack":
-                    cardAttackUse(action);
-                    break;
-                case "cardUsesAbility":
-                    cardAbilityUse(action);
-                    break;
-                case "useAttackHero":
-                    attackHero(action);
-                    break;
-                case "useHeroAbility":
-                    useHeroAbility(action);
-                    break;
-                case "endPlayerTurn":
-                    endPlayerTurn();
-                    break;
-                case "getTotalGamesPlayed":
-                    getTotalGamesPlayed();
-                    break;
-                case "getPlayerOneWins":
-                    getPlayerOneWins();
-                    break;
-                case "getPlayerTwoWins":
-                    getPlayerTwoWins();
-                    break;
-                default:
-                    break;
-            }
+            handleAction(action);
         }
     }
+
+
+
+    private void handleAction(ActionsInput action) {
+        int playerId = action.getPlayerIdx();
+        switch (action.getCommand()) {
+            case "getPlayerDeck":
+                getPlayerDeck(playerId);
+                break;
+            case "getPlayerHero":
+                getPlayerHero(playerId);
+                break;
+            case "getPlayerTurn":
+                getPlayerTurn();
+                break;
+            case "getPlayerMana":
+                getPlayerMana(playerId);
+                break;
+            case "getCardsInHand":
+                getCardsInHand(playerId);
+                break;
+            case "getCardsOnTable":
+                getCardsOnTable();
+                break;
+            case "getFrozenCardsOnTable":
+                getFrozenCardsOnTable();
+                break;
+            case "placeCard":
+                placeCard(action);
+                break;
+            case "getCardAtPosition":
+                getCardAtPos(action);
+                break;
+            case "cardUsesAttack":
+                cardAttackUse(action);
+                break;
+            case "cardUsesAbility":
+                cardAbilityUse(action);
+                break;
+            case "useAttackHero":
+                attackHero(action);
+                break;
+            case "useHeroAbility":
+                useHeroAbility(action);
+                break;
+            case "endPlayerTurn":
+                endPlayerTurn();
+                break;
+            case "getTotalGamesPlayed":
+                getTotalGamesPlayed();
+                break;
+            case "getPlayerOneWins":
+                getPlayerOneWins();
+                break;
+            case "getPlayerTwoWins":
+                getPlayerTwoWins();
+                break;
+            default:
+                break;
+        }
+    }
+
 
     private void getPlayerDeck(int playerId) {
         ArrayList<Card> deck = (playerId == 1) ? player1.getCurrentDeck().getCardsfromDeck() : player2.getCurrentDeck().getCardsfromDeck();
@@ -220,7 +235,7 @@ public class Game {
         Card cardAttacker = gameBoard.getCardOnTable(gameBoard, xAttacker, yAttacker);
 
         String error = "";
-        
+
         if (cardAttacker == null) {
             return;
         } else if (cardAttacked == null) {
@@ -228,12 +243,7 @@ public class Game {
         } else {
             boolean isAttackerFrozen = false;
             int hasTank = gameBoard.hasTank(turn);
-
-            if (cardAttacker instanceof Minion) {
-                isAttackerFrozen = ((Minion) cardAttacker).isFrozen();
-            } else if (cardAttacker instanceof SpecialCard) {
-                isAttackerFrozen = ((SpecialCard) cardAttacker).isFrozen();
-            }
+            isAttackerFrozen = cardAttacker.isFrozen();
 
             if (isAttackerFrozen) {
                 error = "Attacker card is frozen.";
@@ -241,18 +251,18 @@ public class Game {
                 error = "Attacker card has already attacked this turn.";
             } else if ((turn == 1 && xAttacked >= 2) || (turn == 2 && xAttacked < 2)) {
                 error = "Attacked card does not belong to the enemy.";
-            } else if (hasTank == 1) {
-                if (cardAttacked instanceof Minion && !((Minion) cardAttacked).isTank()) {
+            } else if (hasTank == 1 && !cardAttacked.isTank()) { // Polymorphic call
                     error = "Attacked card is not of type 'Tank'.";
-                }
             }
+
         }
 
         if (!error.isEmpty()) {
             CardUsesAttackResponse response =
                     new CardUsesAttackResponse("cardUsesAttack", coordsAtacked, coordsAtacker, error);
             addResponseToOutput(response);
-        } else {
+            return;
+        }
             // pot sa atac
             cardAttacker.setHasUsedAttack(1);
             int points = cardAttacker.getAttackDamage();
@@ -261,7 +271,7 @@ public class Game {
             if (cardAttacked.getHealth() <= 0) {
                 gameBoard.removeCardFromBoard(gameBoard, xAttacked, yAttacked);
             }
-        }
+
     }
 
     private void cardAbilityUse(ActionsInput action) {
@@ -286,7 +296,7 @@ public class Game {
         } else if (cardAttacked == null) {
             return;
         } else {
-            if (cardAttacker instanceof SpecialCard && ((SpecialCard) cardAttacker).isFrozen()) {
+            if (cardAttacker.isFrozen()) {
                 error = "Attacker card is frozen.";
             }
             else if (cardAttacker.getHasUsedAttack() != 0) {
@@ -302,7 +312,7 @@ public class Game {
                     error = "Attacked card does not belong to the enemy.";
                 } else {
                     int hasTank = gameBoard.hasTank(turn);
-                    if (hasTank == 1 && ((cardAttacked instanceof Minion && !((Minion) cardAttacked).isTank()) ||
+                    if (hasTank == 1 && ((cardAttacked instanceof Minion && !cardAttacked.isTank()) ||
                             cardAttacked instanceof SpecialCard)) {
                         error = "Attacked card is not of type 'Tank'.";
                     }
@@ -319,7 +329,7 @@ public class Game {
             cardAttacker.setHasUsedAttack(1);
 
             if (name.equals("The Ripper")) {
-                cardAttacked.setAttackDamage(Math.max(0, cardAttacked.getAttackDamage() - 2));
+                cardAttacked.decreaseAttackDamage(2);
             } else if (name.equals("Miraj")) {
                 int tempHealth = cardAttacker.getHealth();
                 cardAttacker.setHealth(cardAttacked.getHealth());
@@ -352,8 +362,7 @@ public class Game {
             boolean isAttackerFrozen = false;
             int hasTank = gameBoard.hasTank(turn);
 
-            if ((cardAttacker instanceof SpecialCard && ((SpecialCard) cardAttacker).isFrozen()) ||
-                    (cardAttacker instanceof Minion && ((Minion) cardAttacker).isFrozen())) {
+            if (cardAttacker.isFrozen()) {
                 error = "Attacker card is frozen.";
             } else if (cardAttacker.getHasUsedAttack() != 0) {
                 error = "Attacker card has already attacked this turn.";
@@ -434,14 +443,8 @@ public class Game {
         if (ability.equals("Sub-Zero")) {
             for (int i = 0; i < 5; i++) {
                 Card card = gameBoard.gameBoard[affectedRow][i];
-                if (card != null) {
-                    if (card instanceof Minion) {
-                        ((Minion) card).setFrozen(true);
-                    }
-                    if (card instanceof SpecialCard) {
-                        ((SpecialCard) card).setFrozen(true);
-                    }
-                }
+                if (card != null)
+                        card.setFrozen(true);
             }
         }
     }
@@ -503,14 +506,24 @@ public class Game {
             player2.hero.resetHeroAbility();
         }
 
+        // Switch turn
         turn = (turn == 1) ? 2 : 1;
 
+        // Increment mana only after both players' turns
         if (turnsPlayed % 2 == 0) {
             roundsPlayed++;
-            player1.advanceToNextRound(roundsPlayed);
-            player2.advanceToNextRound(roundsPlayed);
+            manaToReceive = Math.min(10, manaToReceive + 1);
+            player1.advanceToNextRound(manaToReceive);
+            player2.advanceToNextRound(manaToReceive);
         }
     }
+
+    public void resetGameStats() {
+        turnsPlayed = 0;
+        roundsPlayed = 0;
+        manaToReceive = 1;
+    }
+
 
     public void getTotalGamesPlayed() {
         GetTotalGamesPlayedResponse response = new GetTotalGamesPlayedResponse("getTotalGamesPlayed", gamesPlayed);
@@ -557,6 +570,4 @@ public class Game {
         roundsPlayed = 1;
         gameInProcess = true;
     }
-
-
 }

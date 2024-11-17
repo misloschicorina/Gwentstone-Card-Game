@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Minion extends Card {
     @JsonIgnore
     private boolean frozen;
-    @JsonIgnore
-    private boolean isTank;
 
     // Minion's coords on gameboard
     @JsonIgnore
@@ -21,15 +19,18 @@ public class Minion extends Card {
         this.frozen = false;
         this.x = x;
         this.y = y;
-        this.isTank = this.name.equals("Goliath") || this.name.equals("Warden");
     }
 
     // Setters:
 
     public void setHealth(int health) { this.health = health; }
 
+    @Override
     @JsonIgnore
-    public void setFrozen(boolean frozen) { this.frozen = frozen; }
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
+    }
+
 
     public void setAttackDamage(int attackDamage) { this.attackDamage = attackDamage; }
 
@@ -37,13 +38,16 @@ public class Minion extends Card {
 
     public int getHealth() { return health; }
 
+    @Override
     @JsonIgnore
     public boolean isFrozen() { return frozen; }
 
     public int getAttackDamage() { return attackDamage; }
 
+    @Override
     @JsonIgnore
     public boolean isTank() {
-        return isTank;
+        return this.name.equals("Goliath") || this.name.equals("Warden");
     }
+
 }

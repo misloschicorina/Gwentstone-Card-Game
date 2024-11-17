@@ -68,11 +68,7 @@ public final class GameBoard {
     public void freezeRow(final int affectedRow) {
         for (int i = 0; i < numberOfColumns; i++) {
             if (gameBoard[affectedRow][i] != null) {
-                // Check if the card is an instance of Minion or SpecialCard
-                if (gameBoard[affectedRow][i] instanceof Minion)
-                    ((Minion) gameBoard[affectedRow][i]).setFrozen(true);
-                else if (gameBoard[affectedRow][i] instanceof SpecialCard)
-                    ((SpecialCard) gameBoard[affectedRow][i]).setFrozen(true);
+                gameBoard[affectedRow][i].setFrozen(true);
             }
         }
     }
@@ -82,11 +78,7 @@ public final class GameBoard {
     public void unfreezeRow(final int affectedRow) {
         for (int i = 0; i < numberOfColumns; i++) {
             if (gameBoard[affectedRow][i] != null) {
-                // Check if the card is an instance of Minion or SpecialCard
-                if (gameBoard[affectedRow][i] instanceof Minion)
-                    ((Minion) gameBoard[affectedRow][i]).setFrozen(false);
-                else if (gameBoard[affectedRow][i] instanceof SpecialCard)
-                    ((SpecialCard) gameBoard[affectedRow][i]).setFrozen(false);
+                gameBoard[affectedRow][i].setFrozen(false);
             }
         }
     }
@@ -127,8 +119,7 @@ public final class GameBoard {
             for (int col = 0; col < numberOfColumns; col++) {
                 Card card = gameBoard[row][col];
                 if (card != null) {
-                    if ((card instanceof Minion && ((Minion) card).isFrozen() == true)||
-                            (card instanceof SpecialCard && ((SpecialCard)card).isFrozen() == true))
+                    if (card.isFrozen() == true)
                     {
                         allFrozenCards.add(card);
                     }
@@ -241,8 +232,8 @@ public final class GameBoard {
         {
             for (int j = 0; j < 5; j++) {
                 Card card = gameBoard[i][j];
-                if (card instanceof Minion) {
-                    if (((Minion)card).isTank()) {
+                if (card != null) {
+                    if (card.isTank()) {
                         return 1; // am gasi tank uri pe tabla pe partea adversarului
                     }
                 }

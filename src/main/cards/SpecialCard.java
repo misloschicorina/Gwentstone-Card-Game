@@ -44,6 +44,7 @@ public class SpecialCard extends Card {
         this.health = health;
     }
 
+    @Override
     @JsonIgnore
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
@@ -58,6 +59,7 @@ public class SpecialCard extends Card {
         return health;
     }
 
+    @Override
     @JsonIgnore
     public boolean isFrozen() {
         return frozen;
@@ -69,5 +71,12 @@ public class SpecialCard extends Card {
 
     public String getAbility() {
         return ability;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isTank() {
+        // Logic specific to SpecialCard, if any.
+        return false;
     }
 }

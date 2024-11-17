@@ -28,24 +28,28 @@ public class GameManager {
         DecksInput playerTwoDecksInput = input.getPlayerTwoDecks();
         ArrayList<GameInput> games = input.getGames();
 
-        // Initialize players outside the loop
-        Player player1 = new Player(1, playerOneWins, playerOneLost, playerOneDecksInput.getNrDecks(), playerOneDecksInput);
-        Player player2 = new Player(2, playerTwoWins, playerTwoLost, playerTwoDecksInput.getNrDecks(), playerTwoDecksInput);
-
-        Game game = null;
-
         for (GameInput gameInput : games) {
             playedGames++;
 
-            if (game == null) {
-                // la inceput creez instanta jocului
-                game = new Game(gameInput, player1, player2, objectMapper, output, playedGames, playerOneWins, playerTwoWins);
-            } else {
-                // dupa dau reset
-                game.resetGame(gameInput);
-            }
+            // Creez o instanță nouă de Game pentru fiecare joc
+            Game game = new Game(gameInput,
+                    new Player(1, playerOneWins, playerOneLost, playerOneDecksInput.getNrDecks(), playerOneDecksInput),
+                    new Player(2, playerTwoWins, playerTwoLost, playerTwoDecksInput.getNrDecks(), playerTwoDecksInput),
+                    objectMapper,
+                    output,
+                    playedGames,
+                    playerOneWins,
+                    playerTwoWins);
 
             game.play();
+
+
+            // Actualizez scorurile globale pe baza rezultatelor jocului
+            if (game.hasPlayerOneWon()) {
+                playerOneWins++;
+            } else if (game.hasPlayerTwoWon()) {
+                playerTwoWins++;
+            }
         }
     }
 }

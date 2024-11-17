@@ -92,6 +92,28 @@
     "name" : "Sentinel"
   }
 }, {
+  "command" : "cardUsesAttack",
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 1
+  },
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 1
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "cardUsesAbility",
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 1
+  },
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 2
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
   "output" : 12
@@ -146,13 +168,6 @@
   "command" : "useAttackHero",
   "cardAttacker" : {
     "x" : 0,
-    "y" : 2
-  },
-  "error" : "Attacked card is not of type 'Tank'."
-}, {
-  "command" : "useAttackHero",
-  "cardAttacker" : {
-    "x" : 0,
     "y" : 1
   },
   "error" : "Attacker card is frozen."
@@ -169,6 +184,17 @@
   "cardAttacker" : {
     "x" : 2,
     "y" : 1
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "cardUsesAttack",
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 1
+  },
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 2
   },
   "error" : "Attacked card is not of type 'Tank'."
 }, {
@@ -198,13 +224,15 @@
   "x" : 2,
   "y" : 0,
   "output" : {
-    "mana" : 2,
-    "attackDamage" : 5,
-    "health" : 1,
+    "mana" : 1,
+    "attackDamage" : 8,
+    "health" : 6,
     "description" : "Premium card: You shall not pass, you shall not prevail, you shall perish.",
-    "colors" : [ "Black", "White", "Green" ],
+    "colors" : [ "Brown", "Blue" ],
     "name" : "Warden"
   }
+}, {
+  "gameEnded" : "Player one killed the enemy hero."
 }, {
   "command" : "getCardsOnTable",
   "output" : [ [ {
@@ -242,12 +270,19 @@
     "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
     "colors" : [ "Red", "Purple" ],
     "name" : "Goliath"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 4,
+    "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
   } ], [ {
-    "mana" : 2,
-    "attackDamage" : 5,
-    "health" : 1,
+    "mana" : 1,
+    "attackDamage" : 8,
+    "health" : 6,
     "description" : "Premium card: You shall not pass, you shall not prevail, you shall perish.",
-    "colors" : [ "Black", "White", "Green" ],
+    "colors" : [ "Brown", "Blue" ],
     "name" : "Warden"
   }, {
     "mana" : 2,
@@ -263,13 +298,6 @@
     "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
     "colors" : [ "Yellow", "Orange", "Red" ],
     "name" : "Miraj"
-  }, {
-    "mana" : 1,
-    "attackDamage" : 8,
-    "health" : 6,
-    "description" : "Premium card: You shall not pass, you shall not prevail, you shall perish.",
-    "colors" : [ "Brown", "Blue" ],
-    "name" : "Warden"
   } ], [ {
     "mana" : 1,
     "attackDamage" : 5,
@@ -315,103 +343,154 @@
   "output" : 0
 }, {
   "command" : "getPlayerOneWins",
-  "output" : 0
+  "output" : 1
 }, {
   "command" : "getPlayerMana",
-  "playerIdx" : 2,
-  "output" : 24
+  "playerIdx" : 1,
+  "output" : 0
 }, {
-  "command" : "getFrozenCardsOnTable",
-  "output" : [ ]
-}, {
-  "command" : "getFrozenCardsOnTable",
-  "output" : [ ]
-}, {
-  "command" : "getCardAtPosition",
-  "x" : 1,
-  "y" : 0,
-  "output" : {
-    "mana" : 1,
-    "attackDamage" : 4,
-    "health" : 8,
-    "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
-    "colors" : [ "Brown", "Black", "Grey" ],
-    "name" : "Goliath"
-  }
+  "command" : "getPlayerTurn",
+  "output" : 1
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
-  "command" : "getPlayerMana",
-  "playerIdx" : 1,
-  "output" : 21
+  "command" : "getCardAtPosition",
+  "x" : 3,
+  "y" : 0,
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 4,
+    "description" : "Premium card: The will of Gods has been spoken, obey and you shall be saved...or not.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 3,
+  "y" : 0,
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 4,
+    "description" : "Premium card: The will of Gods has been spoken, obey and you shall be saved...or not.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
 }, {
   "command" : "getPlayerTurn",
   "output" : 1
 }, {
   "command" : "getPlayerMana",
-  "playerIdx" : 2,
-  "output" : 27
-}, {
-  "command" : "getPlayerMana",
   "playerIdx" : 1,
-  "output" : 22
-}, {
-  "command" : "getCardAtPosition",
-  "x" : 0,
-  "y" : 0,
-  "output" : "No card available at that position."
-}, {
-  "command" : "useHeroAbility",
-  "affectedRow" : 2,
-  "error" : "Selected row does not belong to the current player."
+  "output" : 1
 }, {
   "command" : "getFrozenCardsOnTable",
   "output" : [ ]
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
-}, {
   "command" : "getCardAtPosition",
-  "x" : 3,
+  "x" : 0,
   "y" : 0,
   "output" : {
     "mana" : 1,
     "attackDamage" : 0,
-    "health" : 4,
-    "description" : "Premium card: The will of Gods has been spoken, obey and you shall be saved...or not.",
+    "health" : 3,
+    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
   }
 }, {
-  "command" : "useAttackHero",
-  "cardAttacker" : {
-    "x" : 3,
+  "command" : "getPlayerMana",
+  "playerIdx" : 1,
+  "output" : 4
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 0,
+  "y" : 0,
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 3,
+    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 6
+}, {
+  "command" : "cardUsesAbility",
+  "cardAttacked" : {
+    "x" : 0,
     "y" : 0
   },
-  "error" : "Attacked card is not of type 'Tank'."
-}, {
-  "command" : "getFrozenCardsOnTable",
-  "output" : [ ]
-}, {
-  "command" : "getPlayerMana",
-  "playerIdx" : 1,
-  "output" : 26
-}, {
-  "command" : "getCardAtPosition",
-  "x" : 0,
-  "y" : 0,
-  "output" : "No card available at that position."
-}, {
-  "command" : "getPlayerMana",
-  "playerIdx" : 2,
-  "output" : 39
+  "cardAttacker" : {
+    "x" : 1,
+    "y" : 0
+  },
+  "error" : "Attacked card does not belong to the enemy."
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
+  "command" : "getCardAtPosition",
+  "x" : 3,
+  "y" : 0,
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 4,
+    "description" : "Premium card: The will of Gods has been spoken, obey and you shall be saved...or not.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
+}, {
   "command" : "getFrozenCardsOnTable",
   "output" : [ ]
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 1,
+  "output" : 8
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 0,
+  "y" : 0,
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 4,
+    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
+}, {
+  "command" : "cardUsesAbility",
+  "cardAttacked" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 0
+  },
+  "error" : "Attacked card does not belong to the current player."
 }, {
   "command" : "getCardAtPosition",
   "x" : 3,
@@ -428,30 +507,23 @@
   "command" : "getCardAtPosition",
   "x" : 0,
   "y" : 0,
-  "output" : "No card available at that position."
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 4,
+    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
 }, {
   "command" : "getFrozenCardsOnTable",
   "output" : [ ]
 }, {
-  "command" : "getPlayerMana",
-  "playerIdx" : 2,
-  "output" : 46
+  "command" : "getPlayerTurn",
+  "output" : 2
 }, {
-  "command" : "getPlayerMana",
-  "playerIdx" : 1,
-  "output" : 42
-}, {
-  "command" : "getCardAtPosition",
-  "x" : 0,
-  "y" : 0,
-  "output" : "No card available at that position."
-}, {
-  "command" : "getFrozenCardsOnTable",
-  "output" : [ ]
-}, {
-  "command" : "useHeroAbility",
-  "affectedRow" : 2,
-  "error" : "Selected row does not belong to the current player."
+  "command" : "getPlayerTurn",
+  "output" : 1
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
@@ -461,15 +533,327 @@
   "y" : 0,
   "output" : "No card available at that position."
 }, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "useHeroAbility",
+  "affectedRow" : 3,
+  "error" : "Selected row does not belong to the enemy."
+}, {
+  "command" : "placeCard",
+  "handIdx" : 0,
+  "error" : "Cannot place card on table since row is full."
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 28
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "placeCard",
+  "handIdx" : 0,
+  "error" : "Cannot place card on table since row is full."
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 0,
+  "y" : 0,
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 5,
+    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 38
+}, {
+  "command" : "cardUsesAbility",
+  "cardAttacked" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "cardAttacker" : {
+    "x" : 1,
+    "y" : 0
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 1,
+  "output" : 42
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 0,
+  "y" : 0,
+  "output" : {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 5,
+    "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }
+}, {
+  "command" : "cardUsesAbility",
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 0
+  },
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 2
+  },
+  "error" : "Attacked card does not belong to the enemy."
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 2,
+  "y" : 0,
+  "output" : {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 3,
+    "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
+  }
+}, {
+  "command" : "cardUsesAttack",
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 4
+  },
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 3
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 1,
+  "output" : 49
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 58
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 2,
+  "y" : 0,
+  "output" : {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 5,
+    "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
+  }
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 1,
+  "output" : 59
+}, {
+  "command" : "cardUsesAttack",
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 4
+  },
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 4
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 0,
+  "y" : 0,
+  "output" : "No card available at that position."
+}, {
+  "command" : "cardUsesAttack",
+  "cardAttacked" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "cardAttacker" : {
+    "x" : 1,
+    "y" : 2
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 64
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 2,
+  "y" : 0,
+  "output" : {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 5,
+    "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
+  }
+}, {
+  "command" : "cardUsesAttack",
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 4
+  },
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 2
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 74
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerMana",
+  "playerIdx" : 1,
+  "output" : 76
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 1,
+    "y" : 3
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 0,
+  "y" : 0,
+  "output" : "No card available at that position."
+}, {
+  "command" : "getFrozenCardsOnTable",
+  "output" : [ ]
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 2,
+  "y" : 0,
+  "output" : {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 5,
+    "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
+  }
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 1
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 0
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getCardAtPosition",
+  "x" : 0,
+  "y" : 0,
+  "output" : "No card available at that position."
+}, {
   "command" : "getCardsOnTable",
-  "output" : [ [ ], [ {
+  "output" : [ [ {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 6,
+    "description" : "Standard card: Thrown from the highest cliff, revenge will be his glory.",
+    "colors" : [ "Pink", "Purple" ],
+    "name" : "The Cursed One"
+  } ], [ {
     "mana" : 1,
     "attackDamage" : 4,
-    "health" : 8,
-    "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
-    "colors" : [ "Brown", "Black", "Grey" ],
+    "health" : 5,
+    "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
+    "colors" : [ "Red", "Purple" ],
     "name" : "Goliath"
-  } ], [ ], [ {
+  }, {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 6,
+    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
+    "colors" : [ "Yellow", "Orange", "Red" ],
+    "name" : "Miraj"
+  } ], [ {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 5,
+    "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 7,
+    "health" : 5,
+    "description" : "Premium card: You shall not pass, you shall not prevail, you shall perish.",
+    "colors" : [ "Brown", "Blue" ],
+    "name" : "Warden"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 3,
+    "description" : "Standard card: Death incarnate. No better time to die than now.",
+    "colors" : [ "Black", "Yellow" ],
+    "name" : "The Ripper"
+  } ], [ {
     "mana" : 1,
     "attackDamage" : 0,
     "health" : 4,
@@ -477,28 +861,63 @@
     "colors" : [ "Green", "Yellow", "Blue" ],
     "name" : "Disciple"
   }, {
-    "mana" : 2,
-    "attackDamage" : 5,
-    "health" : 1,
-    "description" : "Standard card: A drink can always be served, with the blood of his enemies.",
-    "colors" : [ "Red", "Blue", "Pink" ],
-    "name" : "Berserker"
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 4,
+    "description" : "Premium card: The will of Gods has been spoken, obey and you shall be saved...or not.",
+    "colors" : [ "Green", "Yellow", "Blue" ],
+    "name" : "Disciple"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 2,
+    "description" : "Standard card: Trained by the best, nothing will catch him off-guard.",
+    "colors" : [ "Black", "Grey", "Blue" ],
+    "name" : "Sentinel"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 2,
+    "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
+    "colors" : [ "Black", "Grey", "Blue" ],
+    "name" : "Sentinel"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 3,
+    "description" : "Premium card: Nobody suspects an outcast, not even the Gods.",
+    "colors" : [ "Pink", "Purple" ],
+    "name" : "The Cursed One"
   } ] ]
+}, {
+  "command" : "getCardsInHand",
+  "output" : [ {
+    "mana" : 1,
+    "attackDamage" : 4,
+    "health" : 8,
+    "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
+    "colors" : [ "Brown", "Black", "Grey" ],
+    "name" : "Goliath"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 2,
+    "description" : "Premium card: His presence is not known even by ghosts, success at all costs.",
+    "colors" : [ "Black", "White" ],
+    "name" : "Sentinel"
+  } ],
+  "playerIdx" : 2
 }, {
   "command" : "getCardsInHand",
   "output" : [ ],
   "playerIdx" : 1
 }, {
-  "command" : "getCardsInHand",
-  "output" : [ ],
-  "playerIdx" : 2
-}, {
   "command" : "getTotalGamesPlayed",
-  "output" : 1
+  "output" : 2
 }, {
   "command" : "getPlayerTwoWins",
   "output" : 0
 }, {
   "command" : "getPlayerOneWins",
-  "output" : 0
+  "output" : 1
 } ]

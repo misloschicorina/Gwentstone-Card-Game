@@ -84,9 +84,9 @@ public class Card {
         this.health += points;
     }
 
-    public void decreaseAttackDamage(int points) {
-        this.attackDamage -= points;
-    }
+//    public void decreaseAttackDamage(int points) {
+//        this.attackDamage -= points;
+//    }
 
     @JsonIgnore
     public int getHasUsedAttack() {
@@ -116,8 +116,51 @@ public class Card {
 
     @JsonIgnore
     public boolean isTank() {
-        if (this.name.equals("Goliath") || this.name.equals("Warden"))
-            return true;
         return false;
     }
+
+    @JsonIgnore
+    public void setFrozen(boolean frozen) {
+        System.out.println("Cards can be frozen only if they are special or minions");
+    }
+
+    @JsonIgnore
+    public boolean isFrozen() {
+        // Default implementation for cards that don't have a frozen state
+        return false;
+    }
+
+    @JsonIgnore
+    public void decreaseAttackDamage(int points) {
+        if (this.attackDamage - points <= 0)
+            this.attackDamage = 0;
+        else
+            this.attackDamage -= points;
+    }
+
+    public void printCard() {
+        System.out.println("Card Details:");
+        System.out.println("==============");
+        System.out.println("Name: " + name);
+        System.out.println("Mana: " + mana);
+        System.out.println("Attack Damage: " + attackDamage);
+        System.out.println("Health: " + health);
+        System.out.println("Description: " + description);
+        System.out.println("Colors: " + String.join(", ", colors));
+        System.out.println("Has Used Attack: " + (hasUsedAttack > 0 ? "Yes" : "No"));
+        System.out.println("Is Tank: " + (isTank() ? "Yes" : "No"));
+        System.out.println();
+    }
+
+    public Card deepCopy() {
+        return new Card(
+                this.mana,
+                this.attackDamage,
+                this.health,
+                this.description,
+                new ArrayList<>(this.colors), // Deep copy pentru listă
+                this.name
+        );
+    }
+
 }
