@@ -1,0 +1,53 @@
+commit f1c84ba768b2ffb1ad9a56031cd3ba38bcb4276b
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Mon Nov 18 13:44:19 2024 +0200
+
+    100 points (resolved check style errors)
+
+commit 2c9ece79b25e926dbce8d933939f75fd101ffbcf
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Sun Nov 17 22:19:45 2024 +0200
+
+    Passed all tests
+
+commit 53ff1ad6706fe072a96b954d5e26542110325a19
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Sun Nov 17 20:57:50 2024 +0200
+
+    80 p
+
+commit 992027480d78b5669940e6e1ebbbd9659af02de1
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Fri Nov 15 18:45:49 2024 +0200
+
+    Tema functioneaza pt toate cazurile cu un singur joc
+
+commit 9bdb895690b801a8ab2e459d7463793bad2c8e65
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Thu Nov 14 22:35:20 2024 +0200
+
+    tema fara ultimele 3 teste
+
+commit 5b6062847469188f421442cdf1070a5a74285e7c
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Wed Nov 13 11:28:34 2024 +0200
+
+    Implementat functii necesare pt primele 7 teste
+
+commit ca7651a013c85e7fd20e2521adedec1999f44b38
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Wed Nov 13 11:09:15 2024 +0200
+
+    Import checker nou pentru tema
+
+commit 81c62c1f90c093435a04c785324b12806a8fad4d
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Thu Nov 7 10:31:05 2024 +0200
+
+    Merge primul test
+
+commit 68471bae7add74e07e54fce14f19639a0f86f086
+Author: Alexandra <alexandra.misloschi@stud.acs.upb.ro>
+Date:   Thu Oct 31 14:37:04 2024 +0200
+
+    Add schelet tema
