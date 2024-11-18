@@ -1,6 +1,6 @@
 package main.game.responses;
 
-public class GetPlayerTurnResponse {
+public final class GetPlayerTurnResponse {
 
     private final String command;
     private final int output;
@@ -10,10 +10,16 @@ public class GetPlayerTurnResponse {
         this.output = output;
     }
 
+    /**
+     * Gets the command associated with this response.
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * Gets the output value representing the player's turn.
+     */
     public int getOutput() {
         return output;
     }

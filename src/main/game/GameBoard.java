@@ -1,163 +1,171 @@
 package main.game;
 
 import main.cards.Card;
-import main.cards.Minion;
-import main.cards.SpecialCard;
-
-import main.game.Player;
 
 import java.util.ArrayList;
 
 public final class GameBoard {
+    private static final int MAX_ROWS = 4;
+    private static final int MAX_COLUMNS = 5;
+    private static final int PLAYER_ONE_START_ROW = 2;
+    private static final int PLAYER_ONE_END_ROW = 3;
+    private static final int PLAYER_TWO_START_ROW = 0;
+    private static final int PLAYER_TWO_END_ROW = 1;
 
-    public final int maxNumberOfCards = 5;
-    public final int numberOfRows = 4;
-    public final int numberOfColumns = 5;
+    private final Card[][] gameBoard; // The 2D array representing the board
 
-    public static GameBoard instance = null;
-
-    // matrice pt tabla de joc
-    public Card[][] gameBoard;
-
-
+    /**
+     * Initializes an empty game board.
+     */
     public GameBoard() {
-        gameBoard = new Card[numberOfRows][numberOfColumns];
+        gameBoard = new Card[MAX_ROWS][MAX_COLUMNS];
     }
 
-
-//    public static GameBoard getInstance() {
-//        if (instance == null) {
-//            instance = new GameBoard();
-//        }
-//
-//        return instance;
-//    }
-//
-//    public static void setInstance(final GameBoard instance) {
-//        GameBoard.instance = instance;
-//    }
-
-
+    /**
+     * Retrieves the card at the specified position on the board.
+     */
     public Card getCard(final int x, final int y) {
-        // daca nu e carte acolo, returnez null
-        if (x < 0 || x >= numberOfRows || y < 0 || y >= numberOfColumns) {
+        if (x < 0 || x >= MAX_ROWS || y < 0 || y >= MAX_COLUMNS) {
             return null;
         }
         return gameBoard[x][y];
     }
 
-
+    /**
+     * Places a card in the specified row on the board.
+     */
     public int placeCard(final int rowIndex, final Card card) {
-        // verific daca randul e plin
-        for (int col = 0; col < numberOfColumns; col++) {
+        for (int col = 0; col < MAX_COLUMNS; col++) {
             if (gameBoard[rowIndex][col] == null) {
-                // pun cartea pe primul loc liber
                 gameBoard[rowIndex][col] = card;
                 return 1;
             }
         }
-        return -1; // randul e plin
+        return -1; // Row is full
     }
 
+    /**
+     * Returns the entire game board as a 2D array.
+     */
+    public Card[][] getGameBoard() {
+        return gameBoard;
+    }
 
+    /**
+     * Retrieves all cards in a specific row.
+     */
     public Card[] getRow(final int rowIndex) {
         return gameBoard[rowIndex];
     }
 
-    // dau freze la un row intreg
+    /**
+     * Freezes all cards in the specified row.
+     */
     public void freezeRow(final int affectedRow) {
-        for (int i = 0; i < numberOfColumns; i++) {
+        for (int i = 0; i < MAX_COLUMNS; i++) {
             if (gameBoard[affectedRow][i] != null) {
                 gameBoard[affectedRow][i].setFrozen(true);
             }
         }
     }
 
-
-    // dezghet un row intreg
+    /**
+     * Unfreezes all cards in the specified row.
+     */
     public void unfreezeRow(final int affectedRow) {
-        for (int i = 0; i < numberOfColumns; i++) {
+        for (int i = 0; i < MAX_COLUMNS; i++) {
             if (gameBoard[affectedRow][i] != null) {
                 gameBoard[affectedRow][i].setFrozen(false);
             }
         }
     }
 
+    /**
+     * Unfreezes all cards belonging to Player 1.
+     */
     public void unfreezeAllForPlayerOne() {
-        unfreezeRow(2);  // Player 1 cards are on rows 2 and 3
-        unfreezeRow(3);
+        unfreezeRow(PLAYER_ONE_START_ROW);
+        unfreezeRow(PLAYER_ONE_END_ROW);
     }
 
+    /**
+     * Unfreezes all cards belonging to Player 2.
+     */
     public void unfreezeAllForPlayerTwo() {
-        unfreezeRow(0);  // Player 2 cards are on rows 0 and 1
-        unfreezeRow(1);
+        unfreezeRow(PLAYER_TWO_START_ROW);
+        unfreezeRow(PLAYER_TWO_END_ROW);
     }
 
+    /**
+     * Retrieves all cards currently on the table.
+     */
     public ArrayList<ArrayList<Card>> getAllCardsOnTable() {
         ArrayList<ArrayList<Card>> allCards = new ArrayList<>();
-
-        // Iterate through all rows and columns of the game board
-        for (int row = 0; row < numberOfRows; row++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
             ArrayList<Card> rowCards = new ArrayList<>();
-            for (int col = 0; col < numberOfColumns; col++) {
+            for (int col = 0; col < MAX_COLUMNS; col++) {
                 Card card = gameBoard[row][col];
                 if (card != null) {
                     rowCards.add(card);
                 }
             }
-            allCards.add(rowCards);  // Add the row to the board's list of cards
+            allCards.add(rowCards);
         }
-
         return allCards;
     }
 
+    /**
+     * Retrieves all frozen cards currently on the table.
+     */
     public ArrayList<Card> getAllFrozenCardsOnTable() {
         ArrayList<Card> allFrozenCards = new ArrayList<>();
-
-        // Iterate through all rows and columns of the game board
-        for (int row = 0; row < numberOfRows; row++) {
-            for (int col = 0; col < numberOfColumns; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLUMNS; col++) {
                 Card card = gameBoard[row][col];
-                if (card != null) {
-                    if (card.isFrozen() == true)
-                    {
-                        allFrozenCards.add(card);
-                    }
+                if (card != null && card.isFrozen()) {
+                    allFrozenCards.add(card);
                 }
             }
         }
         return allFrozenCards;
     }
 
-    public int addCardOnBoard(GameBoard board, Card card, int playerId) {
-        int row_to_put = -1;
+    /**
+     * Adds a card to the board for a specific player.
+     * @return 1 if the card was added successfully, 0 if the row is full
+     */
+    public int addCardOnBoard(final GameBoard board, final Card card, final int playerId) {
+        int rowToPut = -1;
+        String name = card.getName();
 
         // Determine the row based on playerId and card name
-        if (playerId == 1) { // Player 1 can place cards on rows 2 and 3
-            if (card.getName().equals("Sentinel") || card.getName().equals("Berserker"))
-                row_to_put = 3;
-            else if (card.getName().equals("Goliath") || card.getName().equals("Warden"))
-                row_to_put = 2;
-            else if (card.getName().equals("The Ripper") || card.getName().equals("Miraj"))
-                row_to_put = 2;
-            else if (card.getName().equals("The Cursed One") || card.getName().equals("Disciple"))
-                row_to_put = 3;
-        } else if (playerId == 2) { // Player 2 can place cards on rows 0 and 1
-            if (card.getName().equals("Sentinel") || card.getName().equals("Berserker"))
-                row_to_put = 0;
-            else if (card.getName().equals("Goliath") || card.getName().equals("Warden"))
-                row_to_put = 1;
-            else if (card.getName().equals("The Ripper") || card.getName().equals("Miraj"))
-                row_to_put = 1;
-            else if (card.getName().equals("The Cursed One") || card.getName().equals("Disciple"))
-                row_to_put = 0;
+        if (playerId == 1) {
+            if (name.equals("Sentinel") || name.equals("Berserker")) {
+                rowToPut = PLAYER_ONE_END_ROW;
+            } else if (name.equals("Goliath") || name.equals("Warden")) {
+                rowToPut = PLAYER_ONE_START_ROW;
+            } else if (name.equals("The Ripper") || name.equals("Miraj")) {
+                rowToPut = PLAYER_ONE_START_ROW;
+            } else if (name.equals("The Cursed One") || name.equals("Disciple")) {
+                rowToPut = PLAYER_ONE_END_ROW;
+            }
+        } else if (playerId == 2) {
+            if (name.equals("Sentinel") || name.equals("Berserker")) {
+                rowToPut = PLAYER_TWO_START_ROW;
+            } else if (name.equals("Goliath") || name.equals("Warden")) {
+                rowToPut = PLAYER_TWO_END_ROW;
+            } else if (name.equals("The Ripper") || name.equals("Miraj")) {
+                rowToPut = PLAYER_TWO_END_ROW;
+            } else if (name.equals("The Cursed One") || name.equals("Disciple")) {
+                rowToPut = PLAYER_TWO_START_ROW;
+            }
         }
 
         // Try to place the card in the chosen row
-        for (int i = 0; i < 5; i++) {
-            if (board.gameBoard[row_to_put][i] == null) {  // Find an empty spot
-                board.gameBoard[row_to_put][i] = card;  // Place the card
-                return 1;  // Return 1 indicating success
+        for (int i = 0; i < MAX_COLUMNS; i++) {
+            if (board.gameBoard[rowToPut][i] == null) { // Find an empty spot
+                board.gameBoard[rowToPut][i] = card; // Place the card
+                return 1; // Return 1 indicating success
             }
         }
 
@@ -165,119 +173,90 @@ public final class GameBoard {
         return 0;
     }
 
-    public Card getCardOnTable(GameBoard board, int x, int y) {
+    /**
+     * Retrieves the card at the specified position on the table.
+     * @return the card at the given position
+     */
+    public Card getCardOnTable(final GameBoard board, final int x, final int y) {
         return board.gameBoard[x][y];
     }
 
-    public void resetCardsAttackForPlayer(GameBoard board, Player player) {
-        int startRow;
-        int endRow;
-
-        if (player.getId() == 1) {
-            startRow = 2;
-            endRow = 3;
-        } else { // playerId = 2
-            startRow = 0;
-            endRow = 1;
-        }
+    /**
+     * Resets the attack state of all cards for a specific player.
+     */
+    public void resetCardsAttackForPlayer(final GameBoard board, final Player player) {
+        int startRow = player.getId() == 1 ? PLAYER_ONE_START_ROW : PLAYER_TWO_START_ROW;
+        int endRow = player.getId() == 1 ? PLAYER_ONE_END_ROW : PLAYER_TWO_END_ROW;
 
         for (int i = startRow; i <= endRow; i++) {
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < MAX_COLUMNS; j++) {
                 Card card = board.gameBoard[i][j];
-                if (card != null)
+                if (card != null) {
                     card.setHasUsedAttack(0);
-            }
-        }
-    }
-
-    // pt debug (sterge la final)
-    public void printBoard() {
-        for (int row = 0; row < numberOfRows; row++) {
-            if (row < 2) {
-                System.out.println("Player 1: ");
-            } else {
-                System.out.println("Player 2: ");
-            }
-            for (int col = 0; col < numberOfColumns; col++) {
-                Card card = gameBoard[row][col];
-                if (card instanceof Minion) {
-                    Minion minion = (Minion) card;
-                    if (minion.isTank()) {
-                        System.out.println(minion.getName() + " is tank");
-                    } else {
-                        System.out.println(card.getName() + " normal");
-                    }
-                } else if (card instanceof SpecialCard) {
-                    SpecialCard specialCard = (SpecialCard) card;
-                    System.out.println(specialCard.getName() + " special");
                 }
             }
         }
-        System.out.println();
     }
 
-    public int hasTank(int playerId) {
-        int startRow;
-        int endRow;
+    /**
+     * Checks if there is a tank card in the specified player's area.
+     * @return 1 if there is a tank card, 0 otherwise
+     */
+    public int hasTank(final int playerId) {
+        int startRow = playerId == 1 ? PLAYER_TWO_START_ROW : PLAYER_ONE_START_ROW;
+        int endRow = playerId == 1 ? PLAYER_TWO_END_ROW : PLAYER_ONE_END_ROW;
 
-        if (playerId == 1) {
-            startRow = 0;
-            endRow = 1;
-        } else { // playerId = 2
-            startRow = 2;
-            endRow = 3;
-        }
-
-        for (int i = startRow; i <= endRow; i++)
-        {
-            for (int j = 0; j < 5; j++) {
+        for (int i = startRow; i <= endRow; i++) {
+            for (int j = 0; j < MAX_COLUMNS; j++) {
                 Card card = gameBoard[i][j];
-                if (card != null) {
-                    if (card.isTank()) {
-                        return 1; // am gasi tank uri pe tabla pe partea adversarului
-                    }
+                if (card != null && card.isTank()) {
+                    return 1;
                 }
             }
         }
         return 0;
     }
 
-    public int removeCardFromBoard(GameBoard board, int row, int col) {
-        // Validăm coordonatele
-        if (row < 0 || row >= numberOfRows || col < 0 || col >= numberOfColumns) {
-            return -1; // Coordonate invalide
+    /**
+     * Removes a card from the specified position on the board.
+     * @return 1 if removed, 0 if no card exists, -1 if invalid position
+     */
+    public int removeCardFromBoard(final GameBoard board, final int row, final int col) {
+        if (row < 0 || row >= MAX_ROWS || col < 0 || col >= MAX_COLUMNS) {
+            return -1;
         }
 
-        // Verificăm dacă există o carte pe poziția specificată
         if (board.gameBoard[row][col] == null) {
-            return 0; // Nu există o carte de eliminat
+            return 0;
         }
 
-        // Eliminăm cartea și mutăm restul cărților spre stânga
-        for (int i = col; i < numberOfColumns - 1; i++) {
+        // Shift cards in the row to the left, filling the gap created by removal
+        for (int i = col; i < MAX_COLUMNS - 1; i++) {
             board.gameBoard[row][i] = board.gameBoard[row][i + 1];
         }
 
-        // Setăm ultima coloană la `null`
-        board.gameBoard[row][numberOfColumns - 1] = null;
-
-        return 1; // Succes
+        // Set the last position in the row to null
+        board.gameBoard[row][MAX_COLUMNS - 1] = null;
+        return 1;
     }
 
-    public int whoseRowIsIt(int affectedRow) {
-            if (affectedRow < 2)
-                return 2;
-            else
-                return 1;
-        }
+    /**
+     * Determines which player owns the specified row.
+     * @return 1 for Player 1, 2 for Player 2
+     */
+    public int whoseRowIsIt(final int affectedRow) {
+        return affectedRow < 2 ? 2 : 1;
+    }
 
-
+    /**
+     * Resets the board by clearing all cards.
+     */
     public void resetBoard() {
-        // Iterate through each cell in the game board and set it to null
-        for (int row = 0; row < numberOfRows; row++) {
-            for (int col = 0; col < numberOfColumns; col++) {
-                gameBoard[row][col] = null; // Clear the card from the cell
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLUMNS; col++) {
+                gameBoard[row][col] = null;
             }
         }
     }
 }
+

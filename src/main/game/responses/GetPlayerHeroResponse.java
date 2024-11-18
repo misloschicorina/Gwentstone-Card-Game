@@ -2,13 +2,11 @@ package main.game.responses;
 
 import main.cards.Hero;
 
-public class GetPlayerHeroResponse {
+public final class GetPlayerHeroResponse {
 
     private final String command;
     private final int playerId;
-
     private final Hero output;
-
 
     public GetPlayerHeroResponse(final String command, final Hero hero, final int playerId) {
         this.command = command;
@@ -16,16 +14,24 @@ public class GetPlayerHeroResponse {
         this.playerId = playerId;
     }
 
-    public final String getCommand() {
+    /**
+     * Gets the command that generated the response.
+     */
+    public String getCommand() {
         return command;
     }
 
-    public final Hero getOutput() {
+    /**
+     * Gets the Hero object representing the player's hero.
+     */
+    public Hero getOutput() {
         return output;
     }
 
-    public final int getPlayerIdx() {
+    /**
+     * Gets the player ID for the hero being fetched.
+     */
+    public int getPlayerIdx() {
         return playerId;
     }
-
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "command", "playerIdx", "output" })
-public class GetPlayerManaResponse {
+public final class GetPlayerManaResponse {
 
     private final String command;
 
@@ -19,16 +19,24 @@ public class GetPlayerManaResponse {
         this.output = output;
     }
 
-    public final String getCommand() {
+    /**
+     * Gets the command that generated this response.
+     */
+    public String getCommand() {
         return command;
     }
 
-    public final int getPlayerIdx() {
+    /**
+     * Gets the ID of the player whose mana is being fetched.
+     */
+    public int getPlayerIdx() {
         return playerId;
     }
 
-    public final int getOutput() {
+    /**
+     * Gets the player's current mana.
+     */
+    public int getOutput() {
         return output;
     }
-
 }

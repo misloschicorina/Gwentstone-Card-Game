@@ -8,30 +8,24 @@ import main.cards.Hero;
 import java.util.ArrayList;
 
 public class Player {
+    private static final int MAX_MANA = 10;
 
-    public int id; // 1 sau 2
-    public int mana; // mana curenta
+    private int id;
+    private int mana; // current mana
+    private int nrWins;
+    private int nrOfDecks;
+    private Hero hero;
+    private ArrayList<Card> hand; // list of cards in hand
+    private ArrayList<Deck> decks; // player's decks of cards
+    private Deck currentDeck; // currently used deck in the game
 
-    public int nrWins;
-    public int nrLost;
+    private final DecksInput decksInput; // input info about decks
 
-    public int nrOfDecks;
-
-    public Hero hero;
-
-    public ArrayList<Card> hand; // lista de carti din mana
-    public ArrayList<Deck> decks;  // deck-urile de carti ale player-ului
-
-    public Deck currentDeck; // deck ul curent folosit in joc
-
-    private final DecksInput decksInput; // info despre deck-urile primite in input
-
-    // Constructor
-    public Player(int id, int nrWins, int nrLost, int nrOfDecks, DecksInput decksInput) {
+    public Player(final int id, final int nrWins, final int nrOfDecks,
+                                final DecksInput decksInput) {
         this.id = id;
         this.mana = 1;
         this.nrWins = nrWins;
-        this.nrLost = nrLost;
         this.nrOfDecks = nrOfDecks;
         this.hand = new ArrayList<>();
         this.decks = new ArrayList<>();
@@ -40,39 +34,57 @@ public class Player {
         initDecks();
     }
 
-    // Initialize player's decks
+    /**
+     * Initializes the player's decks using input data.
+     */
     private void initDecks() {
         for (int i = 0; i < nrOfDecks; i++) {
             addDeck(decksInput.getDecks().get(i), id);
         }
     }
 
-    // Add a deck to player's decks
-    public void addDeck(final ArrayList<CardInput> deck, int id) {
-        decks.add(new Deck(deck, id));
+    /**
+     * Adds a deck to the player's collection of decks.
+     */
+    public void addDeck(final ArrayList<CardInput> deckData, final int playerId) {
+        decks.add(new Deck(deckData, playerId));
     }
 
-    public Hero initHero(CardInput hero) {
-        return new Hero(hero.getMana(), hero.getDescription(), hero.getColors(), hero.getName());
+    /**
+     * Initializes the player's hero using input data.
+     */
+    public Hero initHero(final CardInput heroInput) {
+        return new Hero(heroInput.getMana(), heroInput.getDescription(),
+                heroInput.getColors(), heroInput.getName());
     }
 
-
-    // Method to start a new game
-    public void startGame(int deckId, int shuffleSeed, CardInput hero) {
-        setDeck(deckId); // Atribuie deck ul playerului
+    /**
+     * Starts a new game for the player.
+     */
+    public void startGame(final int deckId, final int shuffleSeed, final CardInput heroInput) {
+        setDeck(deckId); // Assign the deck to the player
         shuffleDeck(deckId, shuffleSeed); // Shuffle the deck
-        this.hero = initHero(hero); // Set the hero for the player
-        drawFirstCard(); // player ul trage o carte in mana la inceput de joc
+        this.hero = initHero(heroInput); // Set the hero for the player
+        drawFirstCard(); // Player draws the first card at the start of the game
     }
 
-    public void setDeck(int index) {
+    /**
+     * Sets the player's current deck.
+     */
+    public void setDeck(final int index) {
         this.currentDeck = decks.get(index);
     }
 
-    public void shuffleDeck(int deckId, int shuffleSeed) {
+    /**
+     * Shuffles the specified deck using the given seed.
+     */
+    public void shuffleDeck(final int deckId, final int shuffleSeed) {
         decks.get(deckId).shuffle(shuffleSeed);
     }
 
+    /**
+     * Draws the first card from the current deck.
+     */
     public void drawFirstCard() {
         Card drawnCard = currentDeck.drawCard();
         if (drawnCard != null) {
@@ -80,85 +92,104 @@ public class Player {
         }
     }
 
-    public void advanceToNextRound(int manaToReceive) {
+    /**
+     * Advances the player to the next round.
+     */
+    public void advanceToNextRound(final int manaToReceive) {
         // Draw a card if there are any left in the deck
         if (this.currentDeck.nrOfCardsinDeck > 0) {
             Card drawnCard = this.currentDeck.drawCard();
             if (drawnCard != null) {
-                this.hand.add(drawnCard);  // Add the drawn card to the hand
+                this.hand.add(drawnCard); // Add the drawn card to the hand
             }
         }
 
-        // Increase the mana (ensure it doesn't exceed 10)
-        this.mana += Math.min(manaToReceive, 10);
+        // Increase the mana (ensure it doesn't exceed MAX_MANA = 10)
+        this.mana += Math.min(manaToReceive, MAX_MANA);
 
         // Unfreeze the hero if it was frozen from the last round
         this.hero.setFrozen(false);
     }
 
-    // Check if the player has enough mana to place a card
-    public boolean hasMana(Card card) {
+    /**
+     * Checks if the player has enough mana to play a card.
+     */
+    public boolean hasMana(final Card card) {
         return this.mana >= card.getMana();
     }
 
-    // Getters and setters for various attributes
-    public final int getMana() {
+    /**
+     * Gets the player's current mana.
+     */
+    public int getMana() {
         return mana;
     }
 
-    public final void setMana(int mana) {
+    /**
+     * Sets the player's current mana.
+     */
+    public void setMana(final int mana) {
         this.mana = mana;
     }
 
-    public final int getNrWins() {
-        return nrWins;
+    /**
+     * Gets the player's ID.
+     */
+    public int getId() {
+        return id;
     }
 
-    public final void setNrWins(int nrWins) {
-        this.nrWins = nrWins;
-    }
-
-    public final int getNrLost() {
-        return nrLost;
-    }
-
-    public final void setNrLost(int nrLost) {
-        this.nrLost = nrLost;
-    }
-
-    public final ArrayList<Card> getHand() {
+    /**
+     * Gets the player's hand.
+     */
+    public ArrayList<Card> getHand() {
         return hand;
     }
 
-    public final ArrayList<Deck> getDecks() {
+    /**
+     * Gets the player's decks.
+     */
+    public ArrayList<Deck> getDecks() {
         return decks;
     }
 
-    public final Hero getHero() {
+    /**
+     * Gets the player's hero.
+     */
+    public Hero getHero() {
         return hero;
     }
 
-    public final Deck getCurrentDeck() {
+    /**
+     * Gets the player's current deck.
+     */
+    public Deck getCurrentDeck() {
         return currentDeck;
     }
 
-    // get the card at a specific idx in the hand
-    public Card getCardFromHand(int index) {
+    /**
+     * Retrieves a card at a specific index in the hand.
+     */
+    public Card getCardFromHand(final int index) {
         if (index >= 0 && index < hand.size()) {
             return hand.get(index);
         }
         return null;
     }
 
-    public void decreaseMana(int nr) {
+    /**
+     * Decreases the player's mana by the specified amount.
+     */
+    public void decreaseMana(final int nr) {
         this.mana -= nr;
     }
 
-    public int getId()  { return this.id; }
-
+    /**
+     * Resets the player's attributes for a new game.
+     */
     public void resetPlayer() {
-        this.mana = 1; // Reset mana
-        this.hand.clear(); // Clear the hand
+        this.mana = 1;
+        this.hand.clear();
         this.currentDeck = null;
     }
 }

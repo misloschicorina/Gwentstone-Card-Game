@@ -4,23 +4,16 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SpecialCard extends Card {
+
     @JsonIgnore
     private boolean frozen;
     @JsonIgnore
     private String ability;
 
-    // Special Card's coords on gameboard
-    @JsonIgnore
-    private int x;
-    @JsonIgnore
-    private int y;
-
-    public SpecialCard(int mana, String description, ArrayList<String> colors, String name,
-                       int health, int attackDamage, int x, int y) {
+    public SpecialCard(final int mana, final String description, final ArrayList<String> colors,
+                       final String name, final int health, final int attackDamage) {
         super(mana, attackDamage, health, description, colors, name);
         this.frozen = false;
-        this.x = x;
-        this.y = y;
 
         // Assigning abilities based on the name
         switch (this.name) {
@@ -36,47 +29,71 @@ public class SpecialCard extends Card {
             case "Disciple":
                 this.ability = "God's Plan";
                 break;
+            default:
+                throw new IllegalArgumentException("Unknown card name: " + this.name);
         }
     }
 
-    // Setters:
-    public void setHealth(int health) {
+    /**
+     * Sets the health of the card.
+     */
+    public final void setHealth(final int health) {
         this.health = health;
     }
 
+    /**
+     * Sets whether the card is frozen.
+     */
     @Override
     @JsonIgnore
-    public void setFrozen(boolean frozen) {
+    public final void setFrozen(final boolean frozen) {
         this.frozen = frozen;
     }
 
-    public void setAttackDamage(int attackDamage) {
+    /**
+     * Sets the attack damage of the card.
+     */
+    public final void setAttackDamage(final int attackDamage) {
         this.attackDamage = attackDamage;
     }
 
-    // Getters:
-    public int getHealth() {
+    /**
+     * Returns the health of the card.
+     */
+    public final int getHealth() {
         return health;
     }
 
+    /**
+     * Returns whether the card is frozen.
+     */
     @Override
     @JsonIgnore
-    public boolean isFrozen() {
+    public final boolean isFrozen() {
         return frozen;
     }
 
-    public int getAttackDamage() {
+    /**
+     * Returns the attack damage of the card.
+     */
+    public final int getAttackDamage() {
         return attackDamage;
     }
 
-    public String getAbility() {
+    /**
+     * Returns the ability of the card.
+     */
+    public final String getAbility() {
         return ability;
     }
 
+    /**
+     * Checks whether the card is a tank.
+     * By default, special cards are not tanks.
+     */
     @Override
     @JsonIgnore
-    public boolean isTank() {
-        // Logic specific to SpecialCard, if any.
+    public final boolean isTank() {
         return false;
     }
 }

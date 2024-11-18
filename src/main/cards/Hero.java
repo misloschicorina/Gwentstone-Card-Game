@@ -4,29 +4,25 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Hero extends Card {
+    private static final int STARTING_HEALTH = 30;
 
-    // Constanta de inceput pentru sanatatea eroului:
+    private int health;
     @JsonIgnore
-    public final int STARTING_HEALTH = 30;
-
-    public int health; // sanatate curenta erou
-
+    private boolean frozen;
     @JsonIgnore
-    public boolean frozen;
+    private String ability;
     @JsonIgnore
-    public String ability;
-
+    private int attackDamage;
     @JsonIgnore
-    public int attackDamage;
+    private int hasUsedAbility;
 
-    @JsonIgnore
-    int hasUsedAbility;
-
-    public Hero(int mana, String description, ArrayList<String> colors, String name) {
-        super(mana, 0, 30, description, colors, name);
+    public Hero(final int mana, final String description, final ArrayList<String> colors,
+                                                                        final String name) {
+        super(mana, 0, STARTING_HEALTH, description, colors, name);
         this.frozen = false;
         this.health = STARTING_HEALTH;
         this.hasUsedAbility = 0;
+
         switch (this.name) {
             case "Lord Royce":
                 this.ability = "Sub-Zero";
@@ -40,44 +36,61 @@ public class Hero extends Card {
             case "General Kocioraw":
                 this.ability = "Blood Thirst";
                 break;
+            default:
+                throw new IllegalArgumentException("Unknown hero name: " + this.name);
         }
     }
 
-    // Setters:
-    public final void setHealth(int health) {
-        this.health = health;
-    }
-
-    @JsonIgnore
-    public final void setFrozen(boolean frozen) {
-        this.frozen = frozen;
-    }
-
-    // Getters:
+    /**
+     * Returns the current health of the hero.
+     */
     public final int getHealth() {
         return health;
     }
 
-    @JsonIgnore
-    public boolean isFrozen() {
-        return frozen;
+    /**
+     * Sets the health of the hero.
+     */
+    public final void setHealth(final int health) {
+        this.health = health;
     }
 
+    /**
+     * Returns the ability of the hero.
+     */
     public String getAbility() {
         return ability;
     }
 
+    /**
+     * Decreases the hero's health by a specified number of points.
+     */
     @Override
-    public void decreaseHealth(int points) {
+    public void decreaseHealth(final int points) {
         this.health -= points;
     }
 
+    /**
+     * Returns whether the hero has used its ability.
+     */
     @JsonIgnore
-    public int getHasUsedAbility() { return this.hasUsedAbility; }
+    public int getHasUsedAbility() {
+        return hasUsedAbility;
+    }
 
+    /**
+     * Sets whether the hero has used its ability.
+     */
     @JsonIgnore
-    public void setHasUsedAbility(int hasUsedAbility) { this.hasUsedAbility = hasUsedAbility; }
+    public void setHasUsedAbility(final int hasUsedAbility) {
+        this.hasUsedAbility = hasUsedAbility;
+    }
 
+    /**
+     * Resets the hero's ability usage.
+     */
     @JsonIgnore
-    public void resetHeroAbility() { this.hasUsedAbility = 0;}
+    public void resetHeroAbility() {
+        this.hasUsedAbility = 0;
+    }
 }

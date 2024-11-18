@@ -4,7 +4,7 @@ import main.cards.Card;
 
 import java.util.ArrayList;
 
-public class GetCardsOnTableResponse {
+public final class GetCardsOnTableResponse {
 
     private final String command;
     private final ArrayList<ArrayList<Card>> output;
@@ -14,10 +14,16 @@ public class GetCardsOnTableResponse {
         this.output = output;
     }
 
+    /**
+     * Gets the command associated with this response.
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * Gets the list of cards on the table.
+     */
     public ArrayList<ArrayList<Card>> getOutput() {
         return output;
     }

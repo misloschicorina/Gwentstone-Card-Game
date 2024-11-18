@@ -1,12 +1,15 @@
 package main.cards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 
+/**
+ * Represents a generic card in the game.
+ * Subclasses may extend this class to define specific card types
+ * (Minion, SpecialCard, Hero).
+ */
 public class Card {
     protected int mana;
-
     protected int attackDamage;
     protected int health;
     protected String description;
@@ -16,7 +19,8 @@ public class Card {
     @JsonIgnore
     protected int hasUsedAttack;
 
-    public Card(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
+    public Card(final int mana, final int attackDamage, final int health, final String description,
+                final ArrayList<String> colors, final String name) {
         this.mana = mana;
         this.attackDamage = attackDamage;
         this.health = health;
@@ -26,141 +30,164 @@ public class Card {
         this.hasUsedAttack = 0;
     }
 
-    // Getters:
+    /**
+     * Returns the mana cost of the card.
+     */
     public int getMana() {
         return mana;
     }
 
+    /**
+     * Sets the mana cost of the card.
+     */
+    public void setMana(final int mana) {
+        this.mana = mana;
+    }
+
+    /**
+     * Returns the attack damage of the card.
+     */
     public int getAttackDamage() {
         return attackDamage;
     }
 
+    /**
+     * Sets the attack damage of the card.
+     */
+    public void setAttackDamage(final int attackDamage) {
+        this.attackDamage = attackDamage;
+    }
+
+    /**
+     * Returns the health of the card.
+     */
     public int getHealth() {
         return health;
     }
 
+    /**
+     * Sets the health of the card.
+     */
+    public void setHealth(final int health) {
+        this.health = health;
+    }
+
+    /**
+     * Returns the description of the card.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description of the card.
+     */
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    /**
+     * Returns the colors of the card.
+     */
     public ArrayList<String> getColors() {
         return colors;
     }
 
+    /**
+     * Sets the colors of the card.
+     */
+    public void setColors(final ArrayList<String> colors) {
+        this.colors = colors;
+    }
+
+    /**
+     * Returns the name of the card.
+     */
     public String getName() {
         return name;
     }
 
-    // Setters:
-    public void setMana(int mana) {
-        this.mana = mana;
-    }
-
-    public void setAttackDamage(int attackDamage) {
-        this.attackDamage = attackDamage;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setColors(ArrayList<String> colors) {
-        this.colors = colors;
-    }
-
-    public void setName(String name) {
+    /**
+     * Sets the name of the card.
+     */
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public void decreaseHealth(int points) {
+    /**
+     * Decreases the health of the card by a specified number of points.
+     */
+    public void decreaseHealth(final int points) {
         this.health -= points;
     }
 
-    public void increaseHealth(int points) {
+    /**
+     * Increases the health of the card by a specified number of points.
+     */
+    public void increaseHealth(final int points) {
         this.health += points;
     }
 
-//    public void decreaseAttackDamage(int points) {
-//        this.attackDamage -= points;
-//    }
-
+    /**
+     * Returns whether the card has used its attack.
+     */
     @JsonIgnore
     public int getHasUsedAttack() {
         return this.hasUsedAttack;
     }
 
+    /**
+     * Sets whether the card has used its attack.
+     */
     @JsonIgnore
-    public void setHasUsedAttack(int hasUsedAttack) {
+    public void setHasUsedAttack(final int hasUsedAttack) {
         this.hasUsedAttack = hasUsedAttack;
     }
 
-    public void swapHealth(Card otherCard) {
-        int tempHealth = this.health;
-        this.health = otherCard.getHealth();
-        otherCard.setHealth(tempHealth);
-    }
-
+    /**
+     * Swaps the health and attack damage of the card.
+     */
     public void swapHealthWithAttackDamage() {
-        int temp = this.health;
+        final int temp = this.health;
         this.health = this.attackDamage;
         this.attackDamage = temp;
     }
 
-    public void increaseAttackDamage(int points) {
+    /**
+     * Increases the attack damage of the card by a specified number of points.
+     */
+    public void increaseAttackDamage(final int points) {
         this.attackDamage += points;
     }
 
+    /**
+     * Decreases the attack damage of the card by a specified number of points.
+     */
+    @JsonIgnore
+    public void decreaseAttackDamage(final int points) {
+        this.attackDamage = Math.max(this.attackDamage - points, 0);
+    }
+
+    /**
+     * Returns whether the card is a tank. Subclasses may override this method.
+     */
     @JsonIgnore
     public boolean isTank() {
         return false;
     }
 
+    /**
+     * Sets whether the card is frozen. Subclasses may override this method.
+     */
     @JsonIgnore
-    public void setFrozen(boolean frozen) {
-        System.out.println("Cards can be frozen only if they are special or minions");
+    public void setFrozen(final boolean frozen) {
     }
 
+    /**
+     * Returns whether the card is frozen. Subclasses may override this method.
+     */
     @JsonIgnore
     public boolean isFrozen() {
-        // Default implementation for cards that don't have a frozen state
         return false;
     }
-
-    @JsonIgnore
-    public void decreaseAttackDamage(int points) {
-        if (this.attackDamage - points <= 0)
-            this.attackDamage = 0;
-        else
-            this.attackDamage -= points;
-    }
-
-    public void printCard() {
-        System.out.println("Card Details:");
-        System.out.println("==============");
-        System.out.println("Name: " + name);
-        System.out.println("Mana: " + mana);
-        System.out.println("Attack Damage: " + attackDamage);
-        System.out.println("Health: " + health);
-        System.out.println("Description: " + description);
-        System.out.println("Colors: " + String.join(", ", colors));
-        System.out.println("Has Used Attack: " + (hasUsedAttack > 0 ? "Yes" : "No"));
-        System.out.println("Is Tank: " + (isTank() ? "Yes" : "No"));
-        System.out.println();
-    }
-
-    public Card deepCopy() {
-        return new Card(
-                this.mana,
-                this.attackDamage,
-                this.health,
-                this.description,
-                new ArrayList<>(this.colors), // Deep copy pentru listă
-                this.name
-        );
-    }
-
 }

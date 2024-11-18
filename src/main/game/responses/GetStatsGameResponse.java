@@ -1,13 +1,11 @@
 package main.game.responses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class GetTotalGamesPlayedResponse {
+public class GetStatsGameResponse {
     private final String command;
 
     private final int output;
 
-    public GetTotalGamesPlayedResponse(final String command, final int output) {
+    public GetStatsGameResponse(final String command, final int output) {
         this.command = command;
         this.output = output;
     }

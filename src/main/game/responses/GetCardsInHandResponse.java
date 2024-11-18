@@ -4,28 +4,37 @@ import main.cards.Card;
 
 import java.util.ArrayList;
 
-public class GetCardsInHandResponse {
-    private final String command;
+public final class GetCardsInHandResponse {
 
+    private final String command;
     private final ArrayList<Card> output;
     private final int playerId;
 
-    public GetCardsInHandResponse(final String command, final ArrayList<Card> output, final int playerId) {
+    public GetCardsInHandResponse(final String command, final ArrayList<Card> output,
+                                                                final int playerId) {
         this.command = command;
         this.output = output;
         this.playerId = playerId;
     }
 
-    public final String getCommand() {
+    /**
+     * Gets the command that generated the response.
+     */
+    public String getCommand() {
         return command;
     }
 
-    public final ArrayList<Card> getOutput() {
+    /**
+     * Gets the list of cards in the player's hand.
+     */
+    public ArrayList<Card> getOutput() {
         return output;
     }
 
-    public final int getPlayerIdx() {
+    /**
+     * Gets the player ID for the cards in hand.
+     */
+    public int getPlayerIdx() {
         return playerId;
     }
-
 }

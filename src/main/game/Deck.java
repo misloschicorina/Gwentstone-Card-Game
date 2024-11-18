@@ -4,54 +4,52 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import fileio.CardInput;
-
 import main.cards.Card;
 import main.cards.CardBuilder;
 
-
 public class Deck {
-    public ArrayList<Card> cards;  // deck ul e un array de obiecte Card
-    public int nrOfCardsinDeck;
+    protected ArrayList<Card> cards;
+    protected int nrOfCardsinDeck;
 
-    // Constructor that takes an ArrayList<CardInput> to create the deck of a player
-    public Deck(ArrayList<CardInput> cardsInput, int ownerId) {
+    public Deck(final ArrayList<CardInput> cardsInput, final int ownerId) {
         this.cards = new ArrayList<>();
         this.nrOfCardsinDeck = cardsInput.size();
         for (int i = 0; i < cardsInput.size(); i++) {
-
-            // Parse the data from the JSON input file
             CardInput cardInput = cardsInput.get(i);
-
-            // Create a card using the CardBuilder
             Card card = CardBuilder.createCard(cardInput, ownerId);
-
-            // Adding the created card to the cards array
             this.cards.add(card);
         }
     }
 
+    /**
+     * Returns the list of cards in the deck.
+     */
     public ArrayList<Card> getCardsfromDeck() {
-        return cards;
+        return new ArrayList<>(cards);
     }
 
+    /**
+     * Returns the number of cards remaining in the deck.
+     */
     public int getNumberOfCardsInDeck() {
         return nrOfCardsinDeck;
     }
 
-    public Card getCard(int index) {
-        return cards.get(index);
-    }
-
+    /**
+     * Draws the top card from the deck. The card is removed from the deck.
+     */
     public Card drawCard() {
         if (cards.isEmpty()) {
-            return null; // Return null if no cards are left in the deck
+            return null;
         }
         nrOfCardsinDeck--;
-        return cards.remove(0); // Remove the top card from the deck
+        return cards.remove(0);
     }
 
-
-    public void shuffle(int seed) {
+    /**
+     * Shuffles the deck using a specified seed.
+     */
+    public void shuffle(final int seed) {
         Random random = new Random(seed);
         Collections.shuffle(this.cards, random);
     }

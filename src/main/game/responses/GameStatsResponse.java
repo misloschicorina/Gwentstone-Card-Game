@@ -1,20 +1,26 @@
 package main.game.responses;
 
-public class GameStatsResponse {
-    private String command;
-    private int output;
+public final class GameStatsResponse {
 
-    public GameStatsResponse(String command, int output) {
+    private final String command;
+    private final int output;
+
+    public GameStatsResponse(final String command, final int output) {
         this.command = command;
         this.output = output;
     }
 
+    /**
+     * Gets the command associated with this response.
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * Gets the statistic value of this response.
+     */
     public int getOutput() {
         return output;
     }
 }
-

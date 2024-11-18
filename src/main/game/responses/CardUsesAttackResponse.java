@@ -1,13 +1,13 @@
 package main.game.responses;
-import fileio.*;
 
-public class CardUsesAttackResponse {
+import fileio.Coordinates;
+
+public final class CardUsesAttackResponse {
     private final String command;
-    private final Coordinates cardAttacked;  // Adăugăm coordonatele atacatorului
-    private final Coordinates cardAttacker;  // Adăugăm coordonatele atacatului
+    private final Coordinates cardAttacked;
+    private final Coordinates cardAttacker;
     private final String error;
 
-    // Constructor
     public CardUsesAttackResponse(final String command, final Coordinates cardAttacked,
                                   final Coordinates cardAttacker, final String error) {
         this.command = command;
@@ -16,18 +16,30 @@ public class CardUsesAttackResponse {
         this.error = error;
     }
 
+    /**
+     * Gets the command name.
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * Gets the coordinates of the attacking card.
+     */
     public Coordinates getCardAttacker() {
         return cardAttacker;
     }
 
+    /**
+     * Gets the coordinates of the attacked card.
+     */
     public Coordinates getCardAttacked() {
         return cardAttacked;
     }
 
+    /**
+     * Gets the error message, if any.
+     */
     public String getError() {
         return error;
     }
